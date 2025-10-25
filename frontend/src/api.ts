@@ -1,18 +1,19 @@
-import type { 
-  User, 
-  Grant, 
-  GrantWithExpenses, 
-  Expense, 
-  Approval, 
-  ComplianceCheckRequest, 
-  ComplianceCheckResponse 
+import type {
+  User,
+  Grant,
+  GrantWithExpenses,
+  Expense,
+  Approval,
+  ComplianceCheckRequest,
+  ComplianceCheckResponse,
 } from './types';
+import { config } from './config';
+import { mockApiService } from './services/mockApi';
 
-const API_BASE_URL = 'http://localhost:8000';
-
-class ApiService {
+// Real API Service (for when backend is ready)
+class RealApiService {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${config.API_BASE_URL}${endpoint}`;
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
@@ -56,7 +57,10 @@ class ApiService {
     return this.request<GrantWithExpenses>(`/grants/${grantId}`);
   }
 
-  async createExpense(grantId: number, expense: Omit<Expense, 'id' | 'status'>): Promise<Expense> {
+  async createExpense(
+    grantId: number,
+    expense: Omit<Expense, 'id' | 'status'>
+  ): Promise<Expense> {
     return this.request<Expense>(`/grants/${grantId}/expenses`, {
       method: 'POST',
       body: JSON.stringify(expense),
@@ -84,4 +88,7 @@ class ApiService {
   }
 }
 
-export const apiService = new ApiService();
+// Export the appropriate service based on configuration
+// Toggle in config.ts: USE_MOCK_API = true/false
+const realApiService = new RealApiService();
+export const apiService = config.USE_MOCK_API ? mockApiService : realApiService;

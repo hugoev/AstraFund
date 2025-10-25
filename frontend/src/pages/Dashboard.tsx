@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { apiService } from '../api';
+import React from 'react';
 import GrantCard from '../components/GrantCard';
-import type { Grant } from '../types';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
+import { useGrants } from '../hooks/useGrants';
 import styles from './Dashboard.module.css';
 
 interface DashboardProps {
@@ -9,26 +10,7 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ onGrantClick }) => {
-  const [grants, setGrants] = useState<Grant[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    loadGrants();
-  }, []);
-
-  const loadGrants = async () => {
-    try {
-      setLoading(true);
-      const grantsData = await apiService.getGrants();
-      setGrants(grantsData);
-    } catch (err) {
-      setError('Failed to load grants');
-      console.error('Error loading grants:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { grants, loading, error, refetch } = useGrants();
 
   const handleGrantClick = (grantId: number) => {
     if (onGrantClick) {
@@ -40,24 +22,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onGrantClick }) => {
   };
 
   if (loading) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles.spinner}></div>
-        <p>Loading grants...</p>
-      </div>
-    );
+    return <LoadingSpinner message="Loading grants..." />;
   }
 
   if (error) {
-    return (
-      <div className={styles.error}>
-        <h2>Error</h2>
-        <p>{error}</p>
-        <button onClick={loadGrants} className="btn btn-primary">
-          Try Again
-        </button>
-      </div>
-    );
+    return <ErrorMessage message={error} onRetry={refetch} />;
   }
 
   return (

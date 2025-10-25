@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
-import { apiService } from './api';
 import styles from './App.module.css';
 import ApprovalQueue from './components/ApprovalQueue';
 import Header from './components/Header';
 import Dashboard from './pages/Dashboard';
 import GrantDetail from './pages/GrantDetail';
-import type { Expense } from './types';
+import { usePendingExpenses } from './hooks/useExpenses';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [grantId, setGrantId] = useState<number | null>(null);
-  const [pendingExpenses, setPendingExpenses] = useState<Expense[]>([]);
   const [currentUserId] = useState(1); // Mock user ID
+  const { expenses: pendingExpenses, approveExpense } = usePendingExpenses();
 
   useEffect(() => {
     // Handle URL routing
@@ -27,19 +26,7 @@ function App() {
     } else {
       setCurrentPage('dashboard');
     }
-
-    // Load pending expenses for approval queue
-    loadPendingExpenses();
   }, []);
-
-  const loadPendingExpenses = async () => {
-    try {
-      const expenses = await apiService.getPendingExpenses();
-      setPendingExpenses(expenses);
-    } catch (error) {
-      console.error('Failed to load pending expenses:', error);
-    }
-  };
 
   const handleGrantClick = (id: number) => {
     setGrantId(id);
@@ -54,14 +41,11 @@ function App() {
   };
 
   const handleApproveExpense = async (expenseId: number) => {
-    try {
-      await apiService.approveExpense(expenseId, currentUserId);
-      // Reload pending expenses
-      await loadPendingExpenses();
+    const result = await approveExpense(expenseId, currentUserId);
+    if (result.success) {
       alert('Expense approved successfully!');
-    } catch (error) {
-      console.error('Failed to approve expense:', error);
-      alert('Failed to approve expense. Please try again.');
+    } else {
+      alert(`Failed to approve expense: ${result.error}`);
     }
   };
 

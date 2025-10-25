@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { apiService } from '../api';
 import ExpenseForm from '../components/ExpenseForm';
-import type { GrantWithExpenses } from '../types';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
+import { useGrant } from '../hooks/useGrants';
 import styles from './GrantDetail.module.css';
 
 interface GrantDetailProps {
@@ -9,27 +11,8 @@ interface GrantDetailProps {
 }
 
 const GrantDetail: React.FC<GrantDetailProps> = ({ grantId }) => {
-  const [grant, setGrant] = useState<GrantWithExpenses | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { grant, loading, error, refetch } = useGrant(grantId);
   const [currentUserId] = useState(1); // Mock user ID
-
-  useEffect(() => {
-    loadGrant();
-  }, [grantId]);
-
-  const loadGrant = async () => {
-    try {
-      setLoading(true);
-      const grantData = await apiService.getGrant(grantId);
-      setGrant(grantData);
-    } catch (err) {
-      setError('Failed to load grant details');
-      console.error('Error loading grant:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleComplianceCheck = async (expense: { description: string; amount: number }) => {
     if (!grant) return { is_compliant: false, justification: 'Grant not loaded' };
@@ -62,7 +45,7 @@ const GrantDetail: React.FC<GrantDetailProps> = ({ grantId }) => {
       });
 
       // Reload grant to show new expense
-      await loadGrant();
+      await refetch();
     } catch (error) {
       console.error('Failed to submit expense:', error);
       alert('Failed to submit expense. Please try again.');
@@ -70,24 +53,11 @@ const GrantDetail: React.FC<GrantDetailProps> = ({ grantId }) => {
   };
 
   if (loading) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles.spinner}></div>
-        <p>Loading grant details...</p>
-      </div>
-    );
+    return <LoadingSpinner message="Loading grant details..." />;
   }
 
   if (error || !grant) {
-    return (
-      <div className={styles.error}>
-        <h2>Error</h2>
-        <p>{error || 'Grant not found'}</p>
-        <button onClick={() => window.history.back()} className="btn btn-primary">
-          Go Back
-        </button>
-      </div>
-    );
+    return <ErrorMessage message={error || 'Grant not found'} onRetry={refetch} />;
   }
 
   return (
