@@ -1,14 +1,24 @@
-#!/usr/bin/env python3
 """
-Seed the database with sample data for AstraFund demo
+Database seeding script
 """
+import sys
+from pathlib import Path
 
-from datetime import datetime
+# Add app to path
+sys.path.append(str(Path(__file__).parent.parent))
 
-from database import Expense, Grant, SessionLocal, User
+from app.core.database import Base, SessionLocal, engine
+from app.core.logging import get_logger
+from app.models.database import Expense, Grant, User
+
+logger = get_logger(__name__)
 
 
 def seed_database():
+    """Seed the database with sample data"""
+    # Create tables
+    Base.metadata.create_all(bind=engine)
+    
     db = SessionLocal()
     
     try:
@@ -24,7 +34,7 @@ def seed_database():
         
         db.commit()
         
-        # Get the created users
+        # Get created users
         created_users = db.query(User).all()
         program_manager = created_users[0]
         finance_director = created_users[1]
@@ -90,7 +100,7 @@ Educational materials must be scientifically accurate and age-appropriate."""
         
         db.commit()
         
-        # Get the created grants
+        # Get created grants
         created_grants = db.query(Grant).all()
         stem_grant = created_grants[0]
         arts_grant = created_grants[1]
@@ -138,16 +148,18 @@ Educational materials must be scientifically accurate and age-appropriate."""
         
         db.commit()
         
-        print("✅ Database seeded successfully!")
-        print(f"Created {len(created_users)} users")
-        print(f"Created {len(created_grants)} grants")
-        print(f"Created {len(expenses)} expenses")
+        logger.info("✅ Database seeded successfully!")
+        logger.info(f"Created {len(created_users)} users")
+        logger.info(f"Created {len(created_grants)} grants")
+        logger.info(f"Created {len(expenses)} expenses")
         
     except Exception as e:
-        print(f"❌ Error seeding database: {e}")
+        logger.error(f"❌ Error seeding database: {e}")
         db.rollback()
+        raise
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     seed_database()

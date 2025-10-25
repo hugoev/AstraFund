@@ -1,66 +1,83 @@
+"""
+Pydantic schemas for API request/response models
+"""
 from datetime import datetime
 from typing import List, Optional
 
 from pydantic import BaseModel
 
 
-# User models
+# Base schemas
 class UserBase(BaseModel):
     username: str
     role: str
 
-class UserCreate(UserBase):
-    pass
 
-class User(UserBase):
-    id: int
-    
-    class Config:
-        from_attributes = True
-
-# Grant models
 class GrantBase(BaseModel):
     name: str
     total_amount: float
     rules_text: str
 
-class GrantCreate(GrantBase):
-    pass
 
-class Grant(GrantBase):
-    id: int
-    
-    class Config:
-        from_attributes = True
-
-class GrantWithExpenses(Grant):
-    expenses: List['Expense'] = []
-
-# Expense models
 class ExpenseBase(BaseModel):
     description: str
     amount: float
     grant_id: int
     submitter_id: int
 
+
+class ApprovalBase(BaseModel):
+    expense_id: int
+    approver_id: int
+
+
+# Create schemas
+class UserCreate(UserBase):
+    pass
+
+
+class GrantCreate(GrantBase):
+    pass
+
+
 class ExpenseCreate(ExpenseBase):
     ai_compliance_check: Optional[dict] = None
+
+
+class ApprovalCreate(ApprovalBase):
+    pass
+
+
+# Response schemas
+class User(UserBase):
+    id: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class Grant(GrantBase):
+    id: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class GrantWithExpenses(Grant):
+    expenses: List[dict] = []
+
 
 class Expense(ExpenseBase):
     id: int
     status: str
     ai_compliance_check: Optional[dict] = None
+    created_at: datetime
     
     class Config:
         from_attributes = True
 
-# Approval models
-class ApprovalBase(BaseModel):
-    expense_id: int
-    approver_id: int
-
-class ApprovalCreate(ApprovalBase):
-    pass
 
 class Approval(ApprovalBase):
     id: int
@@ -69,11 +86,13 @@ class Approval(ApprovalBase):
     class Config:
         from_attributes = True
 
-# Compliance check models
+
+# Special request schemas
 class ComplianceCheckRequest(BaseModel):
     grant_rules: str
     expense_description: str
     expense_amount: float
+
 
 class ComplianceCheckResponse(BaseModel):
     is_compliant: bool
