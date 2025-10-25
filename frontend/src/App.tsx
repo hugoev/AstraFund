@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import styles from './App.module.css';
-import { ApprovalQueue } from './features/expenses';
-import { Header } from './components/layout';
 import { GalaxyBackground } from './components/common';
+import { Header } from './components/layout';
+import { ApprovalQueue, usePendingExpenses } from './features/expenses';
 import { Dashboard, GrantDetail } from './features/grants';
-import { usePendingExpenses } from './features/expenses';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
