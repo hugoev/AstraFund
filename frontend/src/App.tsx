@@ -39,6 +39,15 @@ function App() {
     window.history.pushState({}, '', '/');
   };
 
+  const handleNavigate = (page: string) => {
+    if (page === 'dashboard') {
+      setCurrentPage('dashboard');
+      setGrantId(null);
+    } else if (page === 'approvals') {
+      setCurrentPage('approvals');
+    }
+  };
+
   const handleApproveExpense = async (expenseId: number) => {
     const result = await approveExpense(expenseId, currentUserId);
     if (result.success) {
@@ -52,7 +61,7 @@ function App() {
     switch (currentPage) {
       case 'grant-detail':
         return grantId ? (
-          <GrantDetail grantId={grantId} />
+          <GrantDetail grantId={grantId} onBackToDashboard={handleBackToDashboard} />
         ) : (
           <div className={styles.error}>
             <h2>Grant not found</h2>
@@ -79,7 +88,7 @@ function App() {
   return (
     <div className={styles.app}>
       <GalaxyBackground />
-      <Header />
+      <Header onNavigate={handleNavigate} />
       <main className={styles.main}>
         {renderPage()}
       </main>

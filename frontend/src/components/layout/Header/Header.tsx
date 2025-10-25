@@ -1,11 +1,30 @@
 import React from 'react';
 import styles from './Header.module.css';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onNavigate: (page: string) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
+  const handleLogoClick = () => {
+    onNavigate('dashboard');
+    window.history.pushState({}, '', '/');
+  };
+
+  const handleDashboardClick = () => {
+    onNavigate('dashboard');
+    window.history.pushState({}, '', '/');
+  };
+
+  const handleApprovalsClick = () => {
+    onNavigate('approvals');
+    window.history.pushState({}, '', '/approvals');
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <div className={styles.logo}>
+        <div className={styles.logo} onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
           <div className={styles.logoIcon}>
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="url(#gradient1)" />
@@ -28,12 +47,12 @@ const Header: React.FC = () => {
           </div>
         </div>
         <nav className={styles.nav}>
-          <a href="/" className={styles.navLink}>
+          <button onClick={handleDashboardClick} className={styles.navLink}>
             <span>Dashboard</span>
-          </a>
-          <a href="/approvals" className={styles.navLink}>
+          </button>
+          <button onClick={handleApprovalsClick} className={styles.navLink}>
             <span>Approvals</span>
-          </a>
+          </button>
           <button className={styles.userButton}>
             <span className={styles.userInitial}>A</span>
           </button>

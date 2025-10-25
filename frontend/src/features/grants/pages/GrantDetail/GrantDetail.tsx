@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { apiService } from '../../../../api';
+import { ErrorMessage, LoadingSpinner } from '../../../../components/common';
 import { ExpenseForm } from '../../../expenses';
-import { LoadingSpinner, ErrorMessage } from '../../../../components/common';
 import { useGrant } from '../../hooks';
 import styles from './GrantDetail.module.css';
 
 interface GrantDetailProps {
   grantId: number;
+  onBackToDashboard?: () => void;
 }
 
-const GrantDetail: React.FC<GrantDetailProps> = ({ grantId }) => {
+const GrantDetail: React.FC<GrantDetailProps> = ({ grantId, onBackToDashboard }) => {
   const { grant, loading, error, refetch } = useGrant(grantId);
   const [currentUserId] = useState(1); // Mock user ID
 
@@ -62,7 +63,7 @@ const GrantDetail: React.FC<GrantDetailProps> = ({ grantId }) => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button onClick={() => window.history.back()} className={styles.backButton}>
+        <button onClick={onBackToDashboard || (() => window.history.back())} className={styles.backButton}>
           ← Back to Dashboard
         </button>
         <h1 className={styles.title}>{grant.name}</h1>
