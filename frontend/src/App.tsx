@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './App.module.css';
 import { ApprovalQueue } from './features/expenses';
 import { Header } from './components/layout';
+import { GalaxyBackground } from './components/common';
 import { Dashboard, GrantDetail } from './features/grants';
 import { usePendingExpenses } from './features/expenses';
 
@@ -78,6 +79,7 @@ function App() {
 
   return (
     <div className={styles.app}>
+      <GalaxyBackground />
       <Header />
       <main className={styles.main}>
         {renderPage()}

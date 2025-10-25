@@ -1,25 +1,39 @@
 .app {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-background) 100%);
+  position: relative;
+  overflow-x: hidden;
 }
 
 .main {
-  min-height: calc(100vh - 80px);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-xl);
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 100px);
 }
 
 .error {
+  padding: 2rem;
   text-align: center;
-  padding: var(--spacing-2xl);
-  color: var(--color-error);
+  max-width: 600px;
+  margin: 4rem auto;
+  background: rgba(10, 5, 22, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 80px rgba(139, 92, 246, 0.1);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .error h2 {
-  color: var(--color-error);
-  margin-bottom: var(--spacing-md);
+  color: #ff6b6b;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
 }
