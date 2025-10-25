@@ -54,6 +54,7 @@ class Expense(Base):
     grant = relationship("Grant", back_populates="expenses")
     submitter = relationship("User", back_populates="expenses")
     approvals = relationship("Approval", back_populates="expense")
+    payments = relationship("Payment", back_populates="expense")
 
 class Approval(Base):
     __tablename__ = "approvals"
@@ -64,8 +65,23 @@ class Approval(Base):
     expense = relationship("Expense", back_populates="approvals")
     approver = relationship("User", back_populates="approvals")
 
+class Payment(Base):
+    __tablename__ = "payments"
+    id = Column(Integer, primary_key=True, index=True)
+    expense_id = Column(Integer, ForeignKey("expenses.id"))
+    amount = Column(Float)
+    payment_method = Column(String)
+    payment_reference = Column(String)
+    status = Column(String, default="pending")
+    processed_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expense = relationship("Expense", back_populates="payments")
+
 
 def seed_database():
+    # Create tables first
+    Base.metadata.create_all(bind=engine)
+    
     db = SessionLocal()
     
     try:
@@ -195,10 +211,56 @@ Educational materials must be scientifically accurate and age-appropriate."""
         
         db.commit()
         
+        # Get created expenses
+        created_expenses = db.query(Expense).all()
+        approved_expense = created_expenses[0]  # The Raspberry Pi expense
+        
+        # Create sample approvals
+        approvals = [
+            Approval(
+                expense_id=approved_expense.id,
+                approver_id=finance_director.id
+            )
+        ]
+        
+        for approval in approvals:
+            db.add(approval)
+        
+        db.commit()
+        
+        # Create sample payments
+        payments = [
+            Payment(
+                expense_id=approved_expense.id,
+                amount=approved_expense.amount,
+                payment_method="bank_transfer",
+                payment_reference="PAY-ABC12345",
+                status="completed"
+            ),
+            Payment(
+                expense_id=created_expenses[1].id,  # Art supplies expense
+                amount=created_expenses[1].amount,
+                payment_method="credit_card",
+                payment_reference="PAY-DEF67890",
+                status="pending"
+            )
+        ]
+        
+        for payment in payments:
+            db.add(payment)
+        
+        db.commit()
+        
+        # Update expense status for paid expense
+        approved_expense.status = "paid"
+        db.commit()
+        
         print("✅ Database seeded successfully!")
         print(f"Created {len(created_users)} users")
         print(f"Created {len(created_grants)} grants")
         print(f"Created {len(expenses)} expenses")
+        print(f"Created {len(approvals)} approvals")
+        print(f"Created {len(payments)} payments")
         
     except Exception as e:
         print(f"❌ Error seeding database: {e}")

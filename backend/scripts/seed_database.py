@@ -9,7 +9,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from app.core.database import Base, SessionLocal, engine
 from app.core.logging import get_logger
-from app.models.database import Expense, Grant, User
+from app.models.database import Approval, Expense, Grant, Payment, User
 
 logger = get_logger(__name__)
 
@@ -148,10 +148,56 @@ Educational materials must be scientifically accurate and age-appropriate."""
         
         db.commit()
         
+        # Get created expenses
+        created_expenses = db.query(Expense).all()
+        approved_expense = created_expenses[0]  # The Raspberry Pi expense
+        
+        # Create sample approvals
+        approvals = [
+            Approval(
+                expense_id=approved_expense.id,
+                approver_id=finance_director.id
+            )
+        ]
+        
+        for approval in approvals:
+            db.add(approval)
+        
+        db.commit()
+        
+        # Create sample payments
+        payments = [
+            Payment(
+                expense_id=approved_expense.id,
+                amount=approved_expense.amount,
+                payment_method="bank_transfer",
+                payment_reference="PAY-ABC12345",
+                status="completed"
+            ),
+            Payment(
+                expense_id=created_expenses[1].id,  # Art supplies expense
+                amount=created_expenses[1].amount,
+                payment_method="credit_card",
+                payment_reference="PAY-DEF67890",
+                status="pending"
+            )
+        ]
+        
+        for payment in payments:
+            db.add(payment)
+        
+        db.commit()
+        
+        # Update expense status for paid expense
+        approved_expense.status = "paid"
+        db.commit()
+        
         logger.info("✅ Database seeded successfully!")
         logger.info(f"Created {len(created_users)} users")
         logger.info(f"Created {len(created_grants)} grants")
         logger.info(f"Created {len(expenses)} expenses")
+        logger.info(f"Created {len(approvals)} approvals")
+        logger.info(f"Created {len(payments)} payments")
         
     except Exception as e:
         logger.error(f"❌ Error seeding database: {e}")
