@@ -2,7 +2,7 @@ fastapi==0.104.1
 uvicorn[standard]==0.24.0
 sqlalchemy==2.0.25
 python-multipart==0.0.6
-google-genai
+google-genai==0.3.0
 python-dotenv==1.0.0
 pydantic==2.6.0
 pydantic-settings==2.1.0
