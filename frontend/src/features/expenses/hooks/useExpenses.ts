@@ -41,6 +41,22 @@ export function usePendingExpenses() {
     [fetchExpenses]
   );
 
-  return { expenses, loading, error, refetch: fetchExpenses, approveExpense };
+  const rejectExpense = useCallback(
+    async (expenseId: number, approverId: number) => {
+      try {
+        await apiService.rejectExpense(expenseId, approverId);
+        // Refetch to get updated list
+        await fetchExpenses();
+        return { success: true };
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to reject expense';
+        console.error('Error rejecting expense:', err);
+        return { success: false, error: message };
+      }
+    },
+    [fetchExpenses]
+  );
+
+  return { expenses, loading, error, refetch: fetchExpenses, approveExpense, rejectExpense };
 }
 

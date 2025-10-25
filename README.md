@@ -23,9 +23,27 @@ AstraFund is an AI-powered financial compliance co-pilot for non-profits that he
 
 ### Prerequisites
 
+**Option 1 (Docker - Recommended):**
+- Docker and Docker Compose
+
+**Option 2 (Local Development):**
 - Python 3.8+
 - Node.js 16+
 - Google Gemini API key ([Get one here](https://makersuite.google.com/app/apikey))
+
+### Quick Start with Docker 🐳
+
+```bash
+# Start the entire application
+docker-compose up
+
+# Frontend: http://localhost:5173
+# Backend: http://localhost:8000
+```
+
+**For detailed Docker commands and troubleshooting, see [DOCKER_GUIDE.md](DOCKER_GUIDE.md)**
+
+### Local Development Setup
 
 ### 1. Clone and Setup
 
@@ -151,6 +169,12 @@ The application comes pre-loaded with:
 - **3 Sample Grants**: STEM Education, Community Arts, Environmental Conservation
 - **3 Sample Users**: Program Managers and Finance Director
 - **3 Sample Expenses**: Mix of compliant and non-compliant examples
+
+## 📚 Documentation
+
+- **[UX_IMPROVEMENTS.md](UX_IMPROVEMENTS.md)**: Complete guide to UX improvements (React Router, Toast Notifications, Confirmation Dialogs)
+- **[DOCKER_GUIDE.md](DOCKER_GUIDE.md)**: Docker setup, commands, and troubleshooting
+- **[frontend/README.md](frontend/README.md)**: Frontend architecture and component documentation
 
 ## 🔒 Security Notes
 

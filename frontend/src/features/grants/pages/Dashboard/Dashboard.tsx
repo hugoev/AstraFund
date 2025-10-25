@@ -1,23 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GrantCard } from '../../components';
 import { LoadingSpinner, ErrorMessage } from '../../../../components/common';
 import { useGrants } from '../../hooks';
 import styles from './Dashboard.module.css';
 
-interface DashboardProps {
-  onGrantClick?: (grantId: number) => void;
-}
-
-const Dashboard: React.FC<DashboardProps> = ({ onGrantClick }) => {
+const Dashboard: React.FC = () => {
   const { grants, loading, error, refetch } = useGrants();
+  const navigate = useNavigate();
 
   const handleGrantClick = (grantId: number) => {
-    if (onGrantClick) {
-      onGrantClick(grantId);
-    } else {
-      // Fallback navigation
-      window.location.href = `/grant/${grantId}`;
-    }
+    navigate(`/grant/${grantId}`);
   };
 
   if (loading) {

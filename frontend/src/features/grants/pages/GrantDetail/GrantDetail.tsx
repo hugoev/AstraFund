@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { apiService } from '../../../../api';
 import { ErrorMessage, LoadingSpinner } from '../../../../components/common';
 import { ExpenseForm } from '../../../expenses';
 import { useGrant } from '../../hooks';
 import styles from './GrantDetail.module.css';
 
-interface GrantDetailProps {
-  grantId: number;
-  onBackToDashboard?: () => void;
-}
-
-const GrantDetail: React.FC<GrantDetailProps> = ({ grantId, onBackToDashboard }) => {
+const GrantDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const grantId = parseInt(id || '0');
   const { grant, loading, error, refetch } = useGrant(grantId);
   const [currentUserId] = useState(1); // Mock user ID
 
@@ -26,6 +26,7 @@ const GrantDetail: React.FC<GrantDetailProps> = ({ grantId, onBackToDashboard })
       return result;
     } catch (error) {
       console.error('Compliance check failed:', error);
+      toast.error('Compliance check failed. Please try again.');
       return { is_compliant: false, justification: 'Compliance check failed' };
     }
   };
@@ -44,11 +45,13 @@ const GrantDetail: React.FC<GrantDetailProps> = ({ grantId, onBackToDashboard })
         ai_compliance_check: complianceResult
       });
 
+      toast.success('Expense submitted successfully!');
+
       // Reload grant to show new expense
       await refetch();
     } catch (error) {
       console.error('Failed to submit expense:', error);
-      alert('Failed to submit expense. Please try again.');
+      toast.error('Failed to submit expense. Please try again.');
     }
   };
 
@@ -63,7 +66,7 @@ const GrantDetail: React.FC<GrantDetailProps> = ({ grantId, onBackToDashboard })
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button onClick={onBackToDashboard || (() => window.history.back())} className={styles.backButton}>
+        <button onClick={() => navigate('/')} className={styles.backButton}>
           ← Back to Dashboard
         </button>
         <h1 className={styles.title}>{grant.name}</h1>

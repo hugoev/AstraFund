@@ -1,98 +1,53 @@
-import { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import styles from './App.module.css';
 import { GalaxyBackground } from './components/common';
 import { Header } from './components/layout';
-import { ApprovalQueue, usePendingExpenses } from './features/expenses';
+import { ApprovalsPage } from './features/expenses';
 import { Dashboard, GrantDetail } from './features/grants';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('dashboard');
-  const [grantId, setGrantId] = useState<number | null>(null);
-  const [currentUserId] = useState(1); // Mock user ID
-  const { expenses: pendingExpenses, approveExpense } = usePendingExpenses();
-
-  useEffect(() => {
-    // Handle URL routing
-    const path = window.location.pathname;
-    if (path.startsWith('/grant/')) {
-      const id = parseInt(path.split('/grant/')[1]);
-      if (!isNaN(id)) {
-        setGrantId(id);
-        setCurrentPage('grant-detail');
-      }
-    } else if (path === '/approvals') {
-      setCurrentPage('approvals');
-    } else {
-      setCurrentPage('dashboard');
-    }
-  }, []);
-
-  const handleGrantClick = (id: number) => {
-    setGrantId(id);
-    setCurrentPage('grant-detail');
-    window.history.pushState({}, '', `/grant/${id}`);
-  };
-
-  const handleBackToDashboard = () => {
-    setCurrentPage('dashboard');
-    setGrantId(null);
-    window.history.pushState({}, '', '/');
-  };
-
-  const handleNavigate = (page: string) => {
-    if (page === 'dashboard') {
-      setCurrentPage('dashboard');
-      setGrantId(null);
-    } else if (page === 'approvals') {
-      setCurrentPage('approvals');
-    }
-  };
-
-  const handleApproveExpense = async (expenseId: number) => {
-    const result = await approveExpense(expenseId, currentUserId);
-    if (result.success) {
-      alert('Expense approved successfully!');
-    } else {
-      alert(`Failed to approve expense: ${result.error}`);
-    }
-  };
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'grant-detail':
-        return grantId ? (
-          <GrantDetail grantId={grantId} onBackToDashboard={handleBackToDashboard} />
-        ) : (
-          <div className={styles.error}>
-            <h2>Grant not found</h2>
-            <button onClick={handleBackToDashboard} className="btn btn-primary">
-              Back to Dashboard
-            </button>
-          </div>
-        );
-      case 'approvals':
-        return (
-          <div className={styles.container}>
-            <ApprovalQueue
-              expenses={pendingExpenses}
-              onApprove={handleApproveExpense}
-              currentUserId={currentUserId}
-            />
-          </div>
-        );
-      default:
-        return <Dashboard onGrantClick={handleGrantClick} />;
-    }
-  };
-
   return (
-    <div className={styles.app}>
-      <GalaxyBackground />
-      <Header onNavigate={handleNavigate} />
-      <main className={styles.main}>
-        {renderPage()}
-      </main>
-    </div>
+    <BrowserRouter>
+      <div className={styles.app}>
+        <GalaxyBackground />
+        <Header />
+        <main className={styles.main}>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/grant/:id" element={<GrantDetail />} />
+            <Route path="/approvals" element={<ApprovalsPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: 'rgba(15, 10, 30, 0.95)',
+              color: 'rgba(255, 255, 255, 0.9)',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              borderRadius: '12px',
+              backdropFilter: 'blur(20px)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 80px rgba(139, 92, 246, 0.1)',
+            },
+            success: {
+              iconTheme: {
+                primary: '#8B5CF6',
+                secondary: 'white',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: 'white',
+              },
+            },
+          }}
+        />
+      </div>
+    </BrowserRouter>
   );
 }
 

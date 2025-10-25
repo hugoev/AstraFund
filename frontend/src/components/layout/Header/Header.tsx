@@ -1,30 +1,14 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import styles from './Header.module.css';
 
-interface HeaderProps {
-  onNavigate: (page: string) => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
-  const handleLogoClick = () => {
-    onNavigate('dashboard');
-    window.history.pushState({}, '', '/');
-  };
-
-  const handleDashboardClick = () => {
-    onNavigate('dashboard');
-    window.history.pushState({}, '', '/');
-  };
-
-  const handleApprovalsClick = () => {
-    onNavigate('approvals');
-    window.history.pushState({}, '', '/approvals');
-  };
+const Header: React.FC = () => {
+  const location = useLocation();
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <div className={styles.logo} onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+        <Link to="/" className={styles.logo}>
           <div className={styles.logoIcon}>
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="url(#gradient1)" />
@@ -45,14 +29,20 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
             <h1 className={styles.title}>AstraFund</h1>
             <p className={styles.subtitle}>★ Financial Compliance Co-Pilot ★</p>
           </div>
-        </div>
+        </Link>
         <nav className={styles.nav}>
-          <button onClick={handleDashboardClick} className={styles.navLink}>
+          <Link 
+            to="/" 
+            className={`${styles.navLink} ${location.pathname === '/' ? styles.active : ''}`}
+          >
             <span>Dashboard</span>
-          </button>
-          <button onClick={handleApprovalsClick} className={styles.navLink}>
+          </Link>
+          <Link 
+            to="/approvals" 
+            className={`${styles.navLink} ${location.pathname === '/approvals' ? styles.active : ''}`}
+          >
             <span>Approvals</span>
-          </button>
+          </Link>
           <button className={styles.userButton}>
             <span className={styles.userInitial}>A</span>
           </button>
