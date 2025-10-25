@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grant } from '../types';
+import type { Grant } from '../types';
 import styles from './ExpenseForm.module.css';
 
 interface ExpenseFormProps {

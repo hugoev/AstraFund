@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiService } from '../api';
 import ExpenseForm from '../components/ExpenseForm';
-import { GrantWithExpenses } from '../types';
+import type { GrantWithExpenses } from '../types';
 import styles from './GrantDetail.module.css';
 
 interface GrantDetailProps {

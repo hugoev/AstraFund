@@ -1,11 +1,11 @@
-import {
-    Approval,
-    ComplianceCheckRequest,
-    ComplianceCheckResponse,
-    Expense,
-    Grant,
-    GrantWithExpenses,
-    User
+import type { 
+  User, 
+  Grant, 
+  GrantWithExpenses, 
+  Expense, 
+  Approval, 
+  ComplianceCheckRequest, 
+  ComplianceCheckResponse 
 } from './types';
 
 const API_BASE_URL = 'http://localhost:8000';

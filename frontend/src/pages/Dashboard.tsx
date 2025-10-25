@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiService } from '../api';
 import GrantCard from '../components/GrantCard';
-import { Grant } from '../types';
+import type { Grant } from '../types';
 import styles from './Dashboard.module.css';
 
 interface DashboardProps {

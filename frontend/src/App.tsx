@@ -5,7 +5,7 @@ import ApprovalQueue from './components/ApprovalQueue';
 import Header from './components/Header';
 import Dashboard from './pages/Dashboard';
 import GrantDetail from './pages/GrantDetail';
-import { Expense } from './types';
+import type { Expense } from './types';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');

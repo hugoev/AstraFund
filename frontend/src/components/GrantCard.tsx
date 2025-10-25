@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grant } from '../types';
+import type { Grant } from '../types';
 import styles from './GrantCard.module.css';
 
 interface GrantCardProps {
