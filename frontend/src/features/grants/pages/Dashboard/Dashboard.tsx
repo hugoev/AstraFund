@@ -1,8 +1,7 @@
 import React from 'react';
-import GrantCard from '../components/GrantCard';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ErrorMessage from '../components/ErrorMessage';
-import { useGrants } from '../hooks/useGrants';
+import { GrantCard } from '../../components';
+import { LoadingSpinner, ErrorMessage } from '../../../../components/common';
+import { useGrants } from '../../hooks';
 import styles from './Dashboard.module.css';
 
 interface DashboardProps {

@@ -6,8 +6,8 @@ import type {
   Approval,
   ComplianceCheckRequest,
   ComplianceCheckResponse,
-} from '../types';
-import { config } from '../config';
+} from '../../types';
+import { config } from '../../config';
 
 // Mock database
 let mockUsers: User[] = [

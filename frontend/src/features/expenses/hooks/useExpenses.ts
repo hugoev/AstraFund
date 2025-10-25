@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiService } from '../api';
-import type { Expense } from '../types';
+import { apiService } from '../../../api';
+import type { Expense } from '../../../types';
 
 export function usePendingExpenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);

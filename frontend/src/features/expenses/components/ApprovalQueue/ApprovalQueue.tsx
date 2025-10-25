@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Expense } from '../types';
+import type { Expense } from '../../../../types';
 import styles from './ApprovalQueue.module.css';
 
 interface ApprovalQueueProps {

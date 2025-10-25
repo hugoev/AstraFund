@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiService } from '../api';
-import type { Grant, GrantWithExpenses } from '../types';
+import { apiService } from '../../../api';
+import type { Grant, GrantWithExpenses } from '../../../types';
 
 export function useGrants() {
   const [grants, setGrants] = useState<Grant[]>([]);

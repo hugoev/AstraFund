@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { apiService } from '../api';
-import ExpenseForm from '../components/ExpenseForm';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ErrorMessage from '../components/ErrorMessage';
-import { useGrant } from '../hooks/useGrants';
+import { apiService } from '../../../../api';
+import { ExpenseForm } from '../../../expenses';
+import { LoadingSpinner, ErrorMessage } from '../../../../components/common';
+import { useGrant } from '../../hooks';
 import styles from './GrantDetail.module.css';
 
 interface GrantDetailProps {
