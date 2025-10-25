@@ -24,21 +24,18 @@ const Header: React.FC = () => {
           </div>
           <div className={styles.logoText}>
             <h1 className={styles.title}>AstraFund</h1>
-            <p className={styles.subtitle}>Financial Compliance Co-Pilot</p>
+            <p className={styles.subtitle}>★ Financial Compliance Co-Pilot ★</p>
           </div>
         </div>
         <nav className={styles.nav}>
           <a href="/" className={styles.navLink}>
-            <span className={styles.navIcon}>📊</span>
             <span>Dashboard</span>
           </a>
           <a href="/approvals" className={styles.navLink}>
-            <span className={styles.navIcon}>✓</span>
             <span>Approvals</span>
           </a>
           <button className={styles.userButton}>
-            <span className={styles.userAvatar}>👤</span>
-            <span>Alice</span>
+            <span className={styles.userInitial}>A</span>
           </button>
         </nav>
       </div>

@@ -87,6 +87,57 @@
   }
 }
 
+/* Purple cowboy constellation - forms a horseshoe shape */
+.constellation {
+  position: absolute;
+  top: 10%;
+  right: 15%;
+  width: 200px;
+  height: 200px;
+  opacity: 0.5;
+}
+
+.constellation .star {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #a78bfa;
+  border-radius: 50%;
+  box-shadow: 
+    0 0 10px #a78bfa,
+    0 0 20px rgba(167, 139, 250, 0.5);
+}
+
+.constellation .star:nth-child(1) {
+  top: 0;
+  left: 50%;
+}
+
+.constellation .star:nth-child(2) {
+  top: 30%;
+  left: 20%;
+}
+
+.constellation .star:nth-child(3) {
+  top: 70%;
+  left: 10%;
+}
+
+.constellation .star:nth-child(4) {
+  bottom: 0;
+  left: 30%;
+}
+
+.constellation .star:nth-child(5) {
+  bottom: 0;
+  right: 30%;
+}
+
+.constellation .star:nth-child(6) {
+  top: 70%;
+  right: 10%;
+}
+
 /* Performance optimizations */
 .container * {
   backface-visibility: hidden;

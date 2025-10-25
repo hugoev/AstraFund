@@ -11,6 +11,29 @@
   min-height: calc(100vh - 100px);
 }
 
+/* Western rope border decoration */
+.main::before {
+  content: '';
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 10px,
+      rgba(139, 92, 246, 0.3) 10px,
+      rgba(139, 92, 246, 0.3) 12px,
+      transparent 12px,
+      transparent 22px
+    );
+  z-index: 999;
+  pointer-events: none;
+}
+
+
 .error {
   padding: 2rem;
   text-align: center;

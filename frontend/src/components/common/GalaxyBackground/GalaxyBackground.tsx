@@ -108,6 +108,16 @@ export default function GalaxyBackground() {
       <div className={styles.nebula1}></div>
       <div className={styles.nebula2}></div>
       <div className={styles.nebula3}></div>
+      
+      {/* Purple cowboy constellation - horseshoe shape */}
+      <div className={styles.constellation}>
+        <div className={styles.star}></div>
+        <div className={styles.star}></div>
+        <div className={styles.star}></div>
+        <div className={styles.star}></div>
+        <div className={styles.star}></div>
+        <div className={styles.star}></div>
+      </div>
     </div>
   );
 }
