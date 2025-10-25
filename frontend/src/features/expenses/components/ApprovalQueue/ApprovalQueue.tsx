@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Expense } from '../../../../types';
-import { ConfirmDialog } from '../../../../components/common';
 import styles from './ApprovalQueue.module.css';
+import { ConfirmDialog } from '/src/components/common';
 
 interface ApprovalQueueProps {
   expenses: Expense[];

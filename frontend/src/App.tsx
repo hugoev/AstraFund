@@ -1,10 +1,12 @@
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import styles from './App.module.css';
-import { GalaxyBackground } from './components/common';
 import { Header } from './components/layout';
+import { AnalyticsPage } from './features/analytics';
 import { ApprovalsPage, PaymentsPage } from './features/expenses';
 import { Dashboard, GrantDetail } from './features/grants';
+import { UsersPage } from './features/users';
+import { GalaxyBackground } from '/src/components/common';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
             <Route path="/grant/:id" element={<GrantDetail />} />
             <Route path="/approvals" element={<ApprovalsPage />} />
             <Route path="/payments" element={<PaymentsPage />} />
+            <Route path="/users" element={<UsersPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

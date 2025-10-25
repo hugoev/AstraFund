@@ -49,6 +49,18 @@ const Header: React.FC = () => {
           >
             <span>Payments</span>
           </Link>
+          <Link 
+            to="/users" 
+            className={`${styles.navLink} ${location.pathname === '/users' ? styles.active : ''}`}
+          >
+            <span>Users</span>
+          </Link>
+          <Link 
+            to="/analytics" 
+            className={`${styles.navLink} ${location.pathname === '/analytics' ? styles.active : ''}`}
+          >
+            <span>Analytics</span>
+          </Link>
           <button className={styles.userButton}>
             <span className={styles.userInitial}>A</span>
           </button>

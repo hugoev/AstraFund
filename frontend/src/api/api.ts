@@ -39,7 +39,11 @@ class RealApiService {
   }
 
   async getUsers(): Promise<User[]> {
-    return this.request<User[]>('/users');
+    return this.request<User[]>('/users/');
+  }
+
+  async getUser(userId: number): Promise<User> {
+    return this.request<User>(`/users/${userId}`);
   }
 
   // Grant endpoints
@@ -51,7 +55,7 @@ class RealApiService {
   }
 
   async getGrants(): Promise<Grant[]> {
-    return this.request<Grant[]>('/grants');
+    return this.request<Grant[]>('/grants/');
   }
 
   async getGrant(grantId: number): Promise<GrantWithExpenses> {
@@ -70,7 +74,7 @@ class RealApiService {
 
   // Expense endpoints
   async getPendingExpenses(): Promise<Expense[]> {
-    return this.request<Expense[]>('/expenses/queue');
+    return this.request<Expense[]>('/expenses/queue/');
   }
 
   async approveExpense(expenseId: number, approverId: number): Promise<Approval> {
@@ -104,7 +108,7 @@ class RealApiService {
   }
 
   async getPayments(): Promise<Payment[]> {
-    return this.request<Payment[]>('/payments');
+    return this.request<Payment[]>('/payments/');
   }
 
   async getExpensePayments(expenseId: number): Promise<Payment[]> {
@@ -112,7 +116,7 @@ class RealApiService {
   }
 
   async getPendingPayments(): Promise<Payment[]> {
-    return this.request<Payment[]>('/payments/pending');
+    return this.request<Payment[]>('/payments/pending/');
   }
 
   async processPayment(paymentId: number): Promise<{ message: string; status: string; payment_reference: string }> {
@@ -125,6 +129,22 @@ class RealApiService {
     return this.request<{ message: string }>(`/payments/${paymentId}/cancel`, {
       method: 'POST',
     });
+  }
+
+  // Approval endpoints
+  async createApproval(approval: Omit<Approval, 'id'>): Promise<Approval> {
+    return this.request<Approval>('/approvals', {
+      method: 'POST',
+      body: JSON.stringify(approval),
+    });
+  }
+
+  async getApprovals(): Promise<Approval[]> {
+    return this.request<Approval[]>('/approvals/');
+  }
+
+  async getExpenseApprovals(expenseId: number): Promise<Approval[]> {
+    return this.request<Approval[]>(`/approvals/expense/${expenseId}`);
   }
 }
 

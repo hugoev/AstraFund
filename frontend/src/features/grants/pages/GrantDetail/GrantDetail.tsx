@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiService } from '../../../../api';
-import { ErrorMessage, LoadingSpinner } from '../../../../components/common';
 import { ExpenseForm, PaymentForm } from '../../../expenses';
 import { useGrant } from '../../hooks';
 import styles from './GrantDetail.module.css';
+import { ErrorMessage, LoadingSpinner } from '/src/components/common';
 
 const GrantDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

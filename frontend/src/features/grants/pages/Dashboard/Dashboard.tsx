@@ -1,16 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { GrantCard } from '../../components';
-import { LoadingSpinner, ErrorMessage } from '../../../../components/common';
-import { useGrants } from '../../hooks';
+import { GrantCard, GrantForm } from '../../components';
+import { useGrantManagement, useGrants } from '../../hooks';
 import styles from './Dashboard.module.css';
+import { ErrorMessage, LoadingSpinner } from '/src/components/common';
 
 const Dashboard: React.FC = () => {
   const { grants, loading, error, refetch } = useGrants();
+  const { createGrant } = useGrantManagement();
   const navigate = useNavigate();
+  const [showGrantForm, setShowGrantForm] = useState(false);
 
   const handleGrantClick = (grantId: number) => {
     navigate(`/grant/${grantId}`);
+  };
+
+  const handleCreateGrant = async (grantData: { name: string; total_amount: number; rules_text: string }) => {
+    const result = await createGrant(grantData);
+    if (result.success) {
+      toast.success(`Grant "${grantData.name}" created successfully!`);
+      setShowGrantForm(false);
+      await refetch();
+    } else {
+      toast.error(`Failed to create grant: ${result.error}`);
+    }
   };
 
   if (loading) {
@@ -24,10 +38,19 @@ const Dashboard: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>Grant Dashboard</h1>
-        <p className={styles.subtitle}>
-          Manage your grants and track compliance
-        </p>
+        <div className={styles.titleSection}>
+          <h1>Grant Dashboard</h1>
+          <p className={styles.subtitle}>
+            Manage your grants and track compliance
+          </p>
+        </div>
+        <button
+          onClick={() => setShowGrantForm(true)}
+          className={styles.createButton}
+        >
+          <span className={styles.buttonIcon}>+</span>
+          Create Grant
+        </button>
       </div>
 
       {grants.length === 0 ? (
@@ -46,6 +69,13 @@ const Dashboard: React.FC = () => {
             />
           ))}
         </div>
+      )}
+
+      {showGrantForm && (
+        <GrantForm
+          onSubmit={handleCreateGrant}
+          onCancel={() => setShowGrantForm(false)}
+        />
       )}
     </div>
   );

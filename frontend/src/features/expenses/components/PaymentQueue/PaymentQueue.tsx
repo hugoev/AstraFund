@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ConfirmDialog } from '../../../../components/common';
 import type { Payment } from '../../../../types';
 import styles from './PaymentQueue.module.css';
+import { ConfirmDialog } from '/src/components/common';
 
 interface PaymentQueueProps {
   payments: Payment[];

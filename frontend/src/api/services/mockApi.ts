@@ -1,13 +1,13 @@
 import { config } from '../../config';
 import type {
-    Approval,
-    ComplianceCheckRequest,
-    ComplianceCheckResponse,
-    Expense,
-    Grant,
-    GrantWithExpenses,
-    Payment,
-    User,
+  Approval,
+  ComplianceCheckRequest,
+  ComplianceCheckResponse,
+  Expense,
+  Grant,
+  GrantWithExpenses,
+  Payment,
+  User,
 } from '../../types';
 
 // Mock database
@@ -322,6 +322,27 @@ export class MockApiService {
     payment.processed_at = new Date().toISOString();
     
     return { message: 'Payment cancelled successfully' };
+  }
+
+  // Approval endpoints
+  async createApproval(approval: Omit<Approval, 'id'>): Promise<Approval> {
+    await this.simulateDelay();
+    const newApproval: Approval = {
+      ...approval,
+      id: mockApprovals.length + 1,
+    };
+    mockApprovals.push(newApproval);
+    return newApproval;
+  }
+
+  async getApprovals(): Promise<Approval[]> {
+    await this.simulateDelay();
+    return [...mockApprovals];
+  }
+
+  async getExpenseApprovals(expenseId: number): Promise<Approval[]> {
+    await this.simulateDelay();
+    return mockApprovals.filter((a) => a.expense_id === expenseId);
   }
 }
 
