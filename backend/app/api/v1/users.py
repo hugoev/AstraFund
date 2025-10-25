@@ -24,13 +24,27 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user
+    return {
+        "id": db_user.id,
+        "username": db_user.username,
+        "role": db_user.role,
+        "created_at": db_user.created_at
+    }
 
 
 @router.get("/", response_model=List[User])
 def get_users(db: Session = Depends(get_db)):
     """Get all users"""
-    return db.query(UserModel).all()
+    users = db.query(UserModel).all()
+    return [
+        {
+            "id": user.id,
+            "username": user.username,
+            "role": user.role,
+            "created_at": user.created_at
+        }
+        for user in users
+    ]
 
 
 @router.get("/{user_id}", response_model=User)
@@ -39,4 +53,9 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(UserModel).filter(UserModel.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    return user
+    return {
+        "id": user.id,
+        "username": user.username,
+        "role": user.role,
+        "created_at": user.created_at
+    }

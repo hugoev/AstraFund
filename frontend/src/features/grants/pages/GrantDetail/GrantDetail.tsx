@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
 import { apiService } from '../../../../api';
 import { ErrorMessage, LoadingSpinner } from '../../../../components/common';
-import { ExpenseForm } from '../../../expenses';
+import { ExpenseForm, PaymentForm } from '../../../expenses';
 import { useGrant } from '../../hooks';
 import styles from './GrantDetail.module.css';
 
@@ -13,6 +13,8 @@ const GrantDetail: React.FC = () => {
   const grantId = parseInt(id || '0');
   const { grant, loading, error, refetch } = useGrant(grantId);
   const [currentUserId] = useState(1); // Mock user ID
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState<{ id: number; amount: number } | null>(null);
 
   const handleComplianceCheck = async (expense: { description: string; amount: number }) => {
     if (!grant) return { is_compliant: false, justification: 'Grant not loaded' };
@@ -42,6 +44,7 @@ const GrantDetail: React.FC = () => {
       // Submit expense with compliance check result
       await apiService.createExpense(grantId, {
         ...expense,
+        grant_id: grantId,
         ai_compliance_check: complianceResult
       });
 
@@ -53,6 +56,29 @@ const GrantDetail: React.FC = () => {
       console.error('Failed to submit expense:', error);
       toast.error('Failed to submit expense. Please try again.');
     }
+  };
+
+  const handlePaymentClick = (expense: { id: number; amount: number }) => {
+    setSelectedExpense(expense);
+    setShowPaymentForm(true);
+  };
+
+  const handlePaymentSubmit = async (payment: { expense_id: number; amount: number; payment_method: string }) => {
+    try {
+      await apiService.createPayment(payment);
+      toast.success('Payment created successfully!');
+      setShowPaymentForm(false);
+      setSelectedExpense(null);
+      await refetch(); // Reload grant to show updated expense status
+    } catch (error) {
+      console.error('Failed to create payment:', error);
+      toast.error('Failed to create payment. Please try again.');
+    }
+  };
+
+  const handlePaymentCancel = () => {
+    setShowPaymentForm(false);
+    setSelectedExpense(null);
   };
 
   if (loading) {
@@ -116,12 +142,31 @@ const GrantDetail: React.FC = () => {
                       <p className={styles.justification}>{expense.ai_compliance_check.justification}</p>
                     </div>
                   )}
+                  {expense.status === 'approved' && (
+                    <div className={styles.paymentActions}>
+                      <button
+                        onClick={() => handlePaymentClick({ id: expense.id, amount: expense.amount })}
+                        className={styles.paymentButton}
+                      >
+                        💳 Process Payment
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
+
+      {showPaymentForm && selectedExpense && (
+        <PaymentForm
+          expenseId={selectedExpense.id}
+          amount={selectedExpense.amount}
+          onSubmit={handlePaymentSubmit}
+          onCancel={handlePaymentCancel}
+        />
+      )}
     </div>
   );
 };

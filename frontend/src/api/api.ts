@@ -1,13 +1,14 @@
+import { config } from '../config';
 import type {
-  User,
-  Grant,
-  GrantWithExpenses,
-  Expense,
   Approval,
   ComplianceCheckRequest,
   ComplianceCheckResponse,
+  Expense,
+  Grant,
+  GrantWithExpenses,
+  Payment,
+  User,
 } from '../types';
-import { config } from '../config';
 import { mockApiService } from './services/mockApi';
 
 // Real API Service (for when backend is ready)
@@ -79,11 +80,50 @@ class RealApiService {
     });
   }
 
+  async rejectExpense(expenseId: number, approverId: number): Promise<Approval> {
+    return this.request<Approval>(`/expenses/${expenseId}/reject`, {
+      method: 'POST',
+      body: JSON.stringify({ approver_id: approverId }),
+    });
+  }
+
   // Compliance check
   async checkCompliance(request: ComplianceCheckRequest): Promise<ComplianceCheckResponse> {
     return this.request<ComplianceCheckResponse>('/check_compliance', {
       method: 'POST',
       body: JSON.stringify(request),
+    });
+  }
+
+  // Payment endpoints
+  async createPayment(payment: Omit<Payment, 'id' | 'status' | 'created_at'>): Promise<Payment> {
+    return this.request<Payment>('/payments', {
+      method: 'POST',
+      body: JSON.stringify(payment),
+    });
+  }
+
+  async getPayments(): Promise<Payment[]> {
+    return this.request<Payment[]>('/payments');
+  }
+
+  async getExpensePayments(expenseId: number): Promise<Payment[]> {
+    return this.request<Payment[]>(`/payments/expense/${expenseId}`);
+  }
+
+  async getPendingPayments(): Promise<Payment[]> {
+    return this.request<Payment[]>('/payments/pending');
+  }
+
+  async processPayment(paymentId: number): Promise<{ message: string; status: string; payment_reference: string }> {
+    return this.request<{ message: string; status: string; payment_reference: string }>(`/payments/${paymentId}/process`, {
+      method: 'POST',
+    });
+  }
+
+  async cancelPayment(paymentId: number): Promise<{ message: string }> {
+    return this.request<{ message: string }>(`/payments/${paymentId}/cancel`, {
+      method: 'POST',
     });
   }
 }

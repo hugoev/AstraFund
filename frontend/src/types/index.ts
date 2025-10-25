@@ -35,6 +35,17 @@ export interface Approval {
   timestamp: string;
 }
 
+export interface Payment {
+  id: number;
+  expense_id: number;
+  amount: number;
+  payment_method: string;
+  payment_reference?: string;
+  status: string;
+  processed_at?: string;
+  created_at: string;
+}
+
 export interface ComplianceCheckRequest {
   grant_rules: string;
   expense_description: string;

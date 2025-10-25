@@ -9,16 +9,16 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-dummy_key_for_demo}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
       - DATABASE_URL=sqlite:///./astrafund.db
-      - ENVIRONMENT=development
-      - DEBUG=true
+      - ENVIRONMENT=production
+      - DEBUG=false
     volumes:
-      - ./backend:/app
-      - backend_data:/app/data
+      - astrafund_data:/app/data
     networks:
       - astrafund-network
     restart: unless-stopped
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -29,44 +29,21 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     container_name: astrafund-frontend
     ports:
-      - "5173:5173"
+      - "3000:80"
     environment:
-      - VITE_API_URL=http://localhost:8000
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - VITE_API_URL=http://backend:8000
     networks:
       - astrafund-network
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  # Optional: Database service (if you want to use PostgreSQL instead of SQLite)
-  # postgres:
-  #   image: postgres:15-alpine
-  #   container_name: astrafund-postgres
-  #   environment:
-  #     - POSTGRES_DB=astrafund
-  #     - POSTGRES_USER=astrafund
-  #     - POSTGRES_PASSWORD=astrafund
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   networks:
-  #     - astrafund-network
-  #   restart: unless-stopped
 
 volumes:
-  backend_data:
-  # postgres_data:
+  astrafund_data:
 
 networks:
   astrafund-network:

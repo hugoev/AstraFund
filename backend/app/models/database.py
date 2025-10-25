@@ -54,6 +54,7 @@ class Expense(Base):
     grant = relationship("Grant", back_populates="expenses")
     submitter = relationship("User", back_populates="expenses")
     approvals = relationship("Approval", back_populates="expense")
+    payments = relationship("Payment", back_populates="expense")
 
 
 class Approval(Base):
@@ -68,3 +69,20 @@ class Approval(Base):
     # Relationships
     expense = relationship("Expense", back_populates="approvals")
     approver = relationship("User", back_populates="approvals")
+
+
+class Payment(Base):
+    """Payment model"""
+    __tablename__ = "payments"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    expense_id = Column(Integer, ForeignKey("expenses.id"), nullable=False)
+    amount = Column(Float, nullable=False)
+    payment_method = Column(String, nullable=False)
+    payment_reference = Column(String, nullable=True)
+    status = Column(String, default="pending", nullable=False)
+    processed_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    expense = relationship("Expense", back_populates="payments")

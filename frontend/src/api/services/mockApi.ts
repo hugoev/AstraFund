@@ -1,13 +1,14 @@
-import type {
-  User,
-  Grant,
-  GrantWithExpenses,
-  Expense,
-  Approval,
-  ComplianceCheckRequest,
-  ComplianceCheckResponse,
-} from '../../types';
 import { config } from '../../config';
+import type {
+    Approval,
+    ComplianceCheckRequest,
+    ComplianceCheckResponse,
+    Expense,
+    Grant,
+    GrantWithExpenses,
+    Payment,
+    User,
+} from '../../types';
 
 // Mock database
 let mockUsers: User[] = [
@@ -80,10 +81,24 @@ let mockApprovals: Approval[] = [
   },
 ];
 
+let mockPayments: Payment[] = [
+  {
+    id: 1,
+    expense_id: 3,
+    amount: 1200,
+    payment_method: 'bank_transfer',
+    payment_reference: 'PAY-ABC12345',
+    status: 'completed',
+    processed_at: new Date().toISOString(),
+    created_at: new Date().toISOString(),
+  },
+];
+
 let nextExpenseId = 4;
 let nextApprovalId = 2;
 let nextUserId = 4;
 let nextGrantId = 4;
+let nextPaymentId = 2;
 
 // Simulated delay for realistic UX
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -180,6 +195,24 @@ export class MockApiService {
     return newApproval;
   }
 
+  async rejectExpense(expenseId: number, approverId: number): Promise<Approval> {
+    await this.simulateDelay();
+    const expense = mockExpenses.find((e) => e.id === expenseId);
+    if (!expense) {
+      throw new Error(`Expense with id ${expenseId} not found`);
+    }
+    
+    expense.status = 'rejected';
+    const newApproval: Approval = {
+      id: nextApprovalId++,
+      expense_id: expenseId,
+      approver_id: approverId,
+      timestamp: new Date().toISOString(),
+    };
+    mockApprovals.push(newApproval);
+    return newApproval;
+  }
+
   // Compliance check
   async checkCompliance(
     request: ComplianceCheckRequest
@@ -195,6 +228,100 @@ export class MockApiService {
         ? `Based on the grant rules, the expense "${request.expense_description}" for $${request.expense_amount} appears to be compliant. The expense aligns with the stated objectives and falls within acceptable parameters.`
         : `The expense "${request.expense_description}" for $${request.expense_amount} may not fully comply with the grant rules. Further review is recommended to ensure alignment with grant objectives.`,
     };
+  }
+
+  // Payment endpoints
+  async createPayment(payment: Omit<Payment, 'id' | 'status' | 'created_at'>): Promise<Payment> {
+    await this.simulateDelay();
+    
+    // Verify expense exists and is approved
+    const expense = mockExpenses.find((e) => e.id === payment.expense_id);
+    if (!expense) {
+      throw new Error(`Expense with id ${payment.expense_id} not found`);
+    }
+    
+    if (expense.status !== 'approved') {
+      throw new Error('Expense must be approved before payment');
+    }
+    
+    const newPayment: Payment = {
+      ...payment,
+      id: nextPaymentId++,
+      status: 'pending',
+      created_at: new Date().toISOString(),
+    };
+    mockPayments.push(newPayment);
+    return newPayment;
+  }
+
+  async getPayments(): Promise<Payment[]> {
+    await this.simulateDelay();
+    return [...mockPayments];
+  }
+
+  async getExpensePayments(expenseId: number): Promise<Payment[]> {
+    await this.simulateDelay();
+    return mockPayments.filter((p) => p.expense_id === expenseId);
+  }
+
+  async getPendingPayments(): Promise<Payment[]> {
+    await this.simulateDelay();
+    return mockPayments.filter((p) => p.status === 'pending');
+  }
+
+  async processPayment(paymentId: number): Promise<{ message: string; status: string; payment_reference: string }> {
+    await this.simulateDelay();
+    
+    const payment = mockPayments.find((p) => p.id === paymentId);
+    if (!payment) {
+      throw new Error(`Payment with id ${paymentId} not found`);
+    }
+    
+    if (payment.status !== 'pending') {
+      throw new Error('Payment is not in pending status');
+    }
+    
+    // Mock payment processing - simulate success/failure
+    const success = Math.random() > 0.1; // 90% success rate
+    
+    if (success) {
+      payment.status = 'completed';
+      payment.processed_at = new Date().toISOString();
+      payment.payment_reference = `PAY-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+      
+      // Update expense status to paid
+      const expense = mockExpenses.find((e) => e.id === payment.expense_id);
+      if (expense) {
+        expense.status = 'paid';
+      }
+    } else {
+      payment.status = 'failed';
+      payment.processed_at = new Date().toISOString();
+    }
+    
+    return {
+      message: `Payment ${success ? 'completed' : 'failed'} successfully`,
+      status: payment.status,
+      payment_reference: payment.payment_reference || '',
+    };
+  }
+
+  async cancelPayment(paymentId: number): Promise<{ message: string }> {
+    await this.simulateDelay();
+    
+    const payment = mockPayments.find((p) => p.id === paymentId);
+    if (!payment) {
+      throw new Error(`Payment with id ${paymentId} not found`);
+    }
+    
+    if (payment.status !== 'pending') {
+      throw new Error('Only pending payments can be cancelled');
+    }
+    
+    payment.status = 'cancelled';
+    payment.processed_at = new Date().toISOString();
+    
+    return { message: 'Payment cancelled successfully' };
   }
 }
 

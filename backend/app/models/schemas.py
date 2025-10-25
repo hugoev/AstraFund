@@ -31,6 +31,13 @@ class ApprovalBase(BaseModel):
     approver_id: int
 
 
+class PaymentBase(BaseModel):
+    expense_id: int
+    amount: float
+    payment_method: str
+    payment_reference: Optional[str] = None
+
+
 # Create schemas
 class UserCreate(UserBase):
     pass
@@ -45,6 +52,10 @@ class ExpenseCreate(ExpenseBase):
 
 
 class ApprovalCreate(ApprovalBase):
+    pass
+
+
+class PaymentCreate(PaymentBase):
     pass
 
 
@@ -82,6 +93,16 @@ class Expense(ExpenseBase):
 class Approval(ApprovalBase):
     id: int
     timestamp: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class Payment(PaymentBase):
+    id: int
+    status: str
+    processed_at: Optional[datetime] = None
+    created_at: datetime
     
     class Config:
         from_attributes = True

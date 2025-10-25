@@ -5,9 +5,9 @@ import json
 import os
 from typing import Dict, Optional
 
-import google.generativeai as genai
 from app.core.config import settings
 from app.core.logging import get_logger
+from google import genai
 
 logger = get_logger(__name__)
 
@@ -17,6 +17,7 @@ class GeminiService:
     
     def __init__(self):
         self.api_key = settings.gemini_api_key
+        self.client = None
         self._configure_gemini()
     
     def _configure_gemini(self) -> None:
@@ -26,7 +27,7 @@ class GeminiService:
             return
         
         try:
-            genai.configure(api_key=self.api_key)
+            self.client = genai.Client(api_key=self.api_key)
             logger.info("Gemini API configured successfully")
         except Exception as e:
             logger.error(f"Failed to configure Gemini API: {e}")
@@ -49,17 +50,19 @@ class GeminiService:
             Dict with 'is_compliant' and 'justification' keys
         """
         # Demo mode if no API key
-        if not self.api_key or self.api_key == "dummy_key_for_demo":
+        if not self.api_key or self.api_key == "dummy_key_for_demo" or not self.client:
             return self._demo_compliance_check(expense_description)
         
         try:
-            model = genai.GenerativeModel('gemini-pro')
-            
             system_prompt = self._get_system_prompt()
             user_prompt = self._get_user_prompt(grant_rules, expense_description, expense_amount)
             full_prompt = f"{system_prompt}\n\n{user_prompt}"
             
-            response = model.generate_content(full_prompt)
+            # Use the new Google GenAI SDK
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=full_prompt
+            )
             
             try:
                 result = json.loads(response.text.strip())

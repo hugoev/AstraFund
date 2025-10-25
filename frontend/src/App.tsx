@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import styles from './App.module.css';
 import { GalaxyBackground } from './components/common';
 import { Header } from './components/layout';
-import { ApprovalsPage } from './features/expenses';
+import { ApprovalsPage, PaymentsPage } from './features/expenses';
 import { Dashboard, GrantDetail } from './features/grants';
 
 function App() {
@@ -17,6 +17,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/grant/:id" element={<GrantDetail />} />
             <Route path="/approvals" element={<ApprovalsPage />} />
+            <Route path="/payments" element={<PaymentsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
