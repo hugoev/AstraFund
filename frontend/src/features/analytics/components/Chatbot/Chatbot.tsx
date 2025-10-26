@@ -21,13 +21,18 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onToggle }) => {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const shouldAutoScroll = useRef(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Only auto-scroll when shouldAutoScroll is true (after user interaction)
+    if (shouldAutoScroll.current) {
+      scrollToBottom();
+      shouldAutoScroll.current = false;
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -58,6 +63,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onToggle }) => {
       timestamp: new Date()
     };
 
+    // Enable auto-scroll for user messages and responses
+    shouldAutoScroll.current = true;
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
     setIsLoading(true);
@@ -74,6 +81,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onToggle }) => {
         suggestions: response.suggestions
       };
 
+      // Enable auto-scroll for AI response
+      shouldAutoScroll.current = true;
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       const errorMessage: Message = {
@@ -82,6 +91,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onToggle }) => {
         content: "I'm sorry, I'm having trouble connecting to the AI service right now. Please try again later.",
         timestamp: new Date()
       };
+      // Enable auto-scroll for error message
+      shouldAutoScroll.current = true;
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -104,15 +115,16 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onToggle }) => {
 
   const handleQuickQuestion = (question: string) => {
     setInputMessage(question);
+    // Auto-scroll will be enabled when the message is sent
   };
 
   return (
     <div className={`${styles.chatbot} ${isOpen ? styles.open : ''}`}>
       <div className={styles.header}>
         <div className={styles.headerContent}>
-          <div className={styles.avatar}>🤖</div>
+          <div className={styles.avatar}>🤠</div>
           <div className={styles.title}>
-            <h3>AI Analytics Assistant</h3>
+            <h3>SpaceCowboy</h3>
             <p>Ask me anything about your data</p>
           </div>
         </div>

@@ -42,39 +42,39 @@ const Header: React.FC = () => {
           </Link>
           
           {hasPermission('approve_expenses') && (
-            <Link 
-              to="/approvals" 
-              className={`${styles.navLink} ${location.pathname === '/approvals' ? styles.active : ''}`}
-            >
-              <span>Approvals</span>
-            </Link>
+          <Link 
+            to="/approvals" 
+            className={`${styles.navLink} ${location.pathname === '/approvals' ? styles.active : ''}`}
+          >
+            <span>Approvals</span>
+          </Link>
           )}
           
           {hasPermission('process_payments') && (
-            <Link 
-              to="/payments" 
-              className={`${styles.navLink} ${location.pathname === '/payments' ? styles.active : ''}`}
-            >
-              <span>Payments</span>
-            </Link>
+          <Link 
+            to="/payments" 
+            className={`${styles.navLink} ${location.pathname === '/payments' ? styles.active : ''}`}
+          >
+            <span>Payments</span>
+          </Link>
           )}
           
           {hasPermission('view_users') && (
-            <Link 
-              to="/users" 
-              className={`${styles.navLink} ${location.pathname === '/users' ? styles.active : ''}`}
-            >
-              <span>Users</span>
-            </Link>
+          <Link 
+            to="/users" 
+            className={`${styles.navLink} ${location.pathname === '/users' ? styles.active : ''}`}
+          >
+            <span>Users</span>
+          </Link>
           )}
           
           {hasPermission('view_analytics') && (
-            <Link 
-              to="/analytics" 
-              className={`${styles.navLink} ${location.pathname === '/analytics' ? styles.active : ''}`}
-            >
-              <span>Analytics</span>
-            </Link>
+          <Link 
+            to="/analytics" 
+            className={`${styles.navLink} ${location.pathname === '/analytics' ? styles.active : ''}`}
+          >
+            <span>Analytics</span>
+          </Link>
           )}
           
         {hasPermission('view_documents') && (
@@ -127,7 +127,7 @@ const Header: React.FC = () => {
                     }}
                   >
                     Logout
-                  </button>
+          </button>
                 </div>
               )}
             </div>
