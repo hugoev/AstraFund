@@ -1,0 +1,151 @@
+.toggleButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--color-secondary), #8B5CF6);
+  border: 2px solid rgba(139, 92, 246, 0.4);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 8px 20px rgba(139, 92, 246, 0.3),
+    0 0 0 1px rgba(139, 92, 246, 0.2);
+  z-index: 999;
+  position: relative;
+  overflow: hidden;
+}
+
+.toggleButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.toggleButton:hover::before {
+  opacity: 1;
+}
+
+.toggleButton:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 12px 25px rgba(139, 92, 246, 0.4),
+    0 0 0 1px rgba(139, 92, 246, 0.3);
+}
+
+.toggleButton.open {
+  background: linear-gradient(135deg, #EF4444, #F87171);
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 
+    0 8px 20px rgba(239, 68, 68, 0.3),
+    0 0 0 1px rgba(239, 68, 68, 0.2);
+}
+
+.toggleButton.open:hover {
+  box-shadow: 
+    0 12px 25px rgba(239, 68, 68, 0.4),
+    0 0 0 1px rgba(239, 68, 68, 0.3);
+}
+
+.icon {
+  font-size: 1.5rem;
+  color: white;
+  transition: transform 0.3s ease;
+  z-index: 1;
+  position: relative;
+}
+
+.toggleButton:hover .icon {
+  transform: scale(1.1);
+}
+
+.toggleButton.open .icon {
+  transform: rotate(90deg);
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background: rgba(15, 10, 30, 0.95);
+  color: var(--color-text);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: 'Space Mono', monospace;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  backdrop-filter: blur(10px);
+  clip-path: polygon(
+    4px 0, calc(100% - 4px) 0,
+    100% 4px, 100% calc(100% - 4px),
+    calc(100% - 4px) 100%, 4px 100%,
+    0 calc(100% - 4px), 0 4px
+  );
+}
+
+.toggleButton:hover .tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 20px;
+  border: 5px solid transparent;
+  border-top-color: rgba(15, 10, 30, 0.95);
+}
+
+/* Pulse animation for new messages */
+.toggleButton:not(.open) {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 
+      0 8px 20px rgba(139, 92, 246, 0.3),
+      0 0 0 1px rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 8px 20px rgba(139, 92, 246, 0.3),
+      0 0 0 1px rgba(139, 92, 246, 0.2),
+      0 0 20px rgba(139, 92, 246, 0.4);
+  }
+}
+
+@media (max-width: 768px) {
+  .toggleButton {
+    width: 50px;
+    height: 50px;
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .icon {
+    font-size: 1.2rem;
+  }
+  
+  .tooltip {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.6rem;
+  }
+}

@@ -92,6 +92,79 @@ class GeminiService:
 
 Proposed Expense: A purchase of '{expense_description}' for ${expense_amount}."""
     
+    def generate_insights(
+        self,
+        user_message: str,
+        system_prompt: str,
+        analytics_data: Dict
+    ) -> str:
+        """
+        Generate AI insights based on analytics data
+        
+        Args:
+            user_message: The user's question or request
+            system_prompt: System prompt for context
+            analytics_data: Current analytics data
+            
+        Returns:
+            AI-generated response string
+        """
+        # Demo mode if no API key
+        if not self.api_key or self.api_key == "dummy_key_for_demo" or not self.client:
+            return self._demo_insights_response(user_message, analytics_data)
+        
+        try:
+            full_prompt = f"{system_prompt}\n\nUser Question: {user_message}"
+            
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=full_prompt
+            )
+            
+            logger.info("AI insights generated successfully")
+            return response.text.strip()
+            
+        except Exception as e:
+            logger.error(f"Gemini insights error: {e}")
+            return f"I apologize, but I'm having trouble analyzing your data right now. Error: {str(e)}"
+    
+    def _demo_insights_response(self, user_message: str, analytics_data: Dict) -> str:
+        """Demo mode insights response"""
+        total_grants = analytics_data.get('total_grants', 0)
+        total_spent = analytics_data.get('total_spent', 0)
+        total_grant_amount = analytics_data.get('total_grant_amount', 0)
+        compliance_rate = analytics_data.get('compliance_rate', 0)
+        
+        # Generate basic insights based on data
+        insights = []
+        
+        if total_grants > 0:
+            insights.append(f"You have {total_grants} active grants in your system.")
+        
+        if total_grant_amount > 0:
+            utilization = (total_spent / total_grant_amount) * 100
+            insights.append(f"Budget utilization is at {utilization:.1f}% (${total_spent:,.2f} of ${total_grant_amount:,.2f}).")
+            
+            if utilization > 90:
+                insights.append("⚠️ High budget utilization - consider reviewing remaining funds.")
+            elif utilization < 30:
+                insights.append("💡 Low budget utilization - you have room for more activities.")
+        
+        if compliance_rate > 80:
+            insights.append("✅ Excellent compliance rate indicates good expense management.")
+        elif compliance_rate < 50:
+            insights.append("⚠️ Low compliance rate - consider reviewing expense guidelines.")
+        
+        # Simple keyword-based responses
+        if "budget" in user_message.lower():
+            return f"Based on your current data: {'. '.join(insights)}"
+        elif "compliance" in user_message.lower():
+            return f"Your compliance rate is {compliance_rate}%. {insights[-1] if insights else 'Consider reviewing your expense submission process.'}"
+        elif "trend" in user_message.lower():
+            return f"Here are some key insights: {'. '.join(insights[:3])}"
+        else:
+            return f"Here's what I can tell you about your grant management: {'. '.join(insights)}"
+
     def _demo_compliance_check(self, expense_description: str) -> Dict[str, any]:
         """Demo mode compliance check"""
         # Simple heuristic for demo

@@ -167,6 +167,20 @@ class RealApiService {
     const response = await this.request<any>(`/analytics/users/${userId}/analytics`);
     return response;
   }
+
+  // Chatbot methods
+  async chatWithAnalytics(message: string, context?: any): Promise<any> {
+    const response = await this.request<any>('/chatbot/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, context }),
+    });
+    return response;
+  }
+
+  async getAIInsights(): Promise<any> {
+    const response = await this.request<any>('/chatbot/insights');
+    return response;
+  }
 }
 
 // Export the appropriate service based on configuration

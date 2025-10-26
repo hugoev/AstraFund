@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import { Chart, MetricCard, ProgressBar, TimePeriodSelector } from '../../components';
+import { Chart, Chatbot, ChatbotToggle, MetricCard, ProgressBar, TimePeriodSelector } from '../../components';
 import { useAnalytics } from '../../hooks';
 import styles from './AnalyticsPage.module.css';
 import { ErrorMessage, LoadingSpinner } from '/src/components/common';
 
 const AnalyticsPage: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('30');
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const { analytics, trends, loading, error, refetch } = useAnalytics();
 
   const handlePeriodChange = (period: string) => {
     setSelectedPeriod(period);
     refetch(parseInt(period));
+  };
+
+  const toggleChatbot = () => {
+    setIsChatbotOpen(!isChatbotOpen);
   };
 
   if (loading) {
@@ -205,6 +210,10 @@ const AnalyticsPage: React.FC = () => {
           />
         </div>
       </div>
+
+      {/* AI Chatbot */}
+      <Chatbot isOpen={isChatbotOpen} onToggle={toggleChatbot} />
+      <ChatbotToggle onClick={toggleChatbot} isOpen={isChatbotOpen} />
     </div>
   );
 };
