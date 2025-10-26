@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiService } from '../../../api';
 import type { Expense } from '../../../types';
 
@@ -57,6 +57,14 @@ export function usePendingExpenses() {
     [fetchExpenses]
   );
 
-  return { expenses, loading, error, refetch: fetchExpenses, approveExpense, rejectExpense };
+  return { 
+    expenses,
+    pendingExpenses: expenses, // Alias for compatibility with Financial Workflow page
+    loading, 
+    error, 
+    refetch: fetchExpenses, 
+    approveExpense, 
+    rejectExpense 
+  };
 }
 

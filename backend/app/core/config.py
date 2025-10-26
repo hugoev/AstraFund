@@ -22,8 +22,14 @@ class Settings(BaseSettings):
     # API Keys
     gemini_api_key: Optional[str] = None
     
-    # CORS
-    cors_origins: list = ["http://localhost:5173", "http://localhost:3000"]
+    # CORS - Allow frontend from various sources
+    cors_origins: list = [
+        "http://localhost:5173",  # Vite dev server
+        "http://localhost:3000",  # Frontend container/production
+        "http://127.0.0.1:5173",  # Alternative localhost
+        "http://127.0.0.1:3000",  # Alternative localhost
+        "http://frontend:80",     # Docker internal network
+    ]
     
     # Logging
     log_level: str = "INFO"

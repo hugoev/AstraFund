@@ -34,7 +34,8 @@ services:
     ports:
       - "3000:80"
     environment:
-      - VITE_API_URL=http://backend:8000
+      # Empty string for same-origin requests - nginx will proxy to backend
+      - VITE_API_URL=
     networks:
       - astrafund-network
     depends_on:

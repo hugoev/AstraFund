@@ -27,7 +27,9 @@ const ROLE_PERMISSIONS = {
     'process_payments',
     'manage_finance', // Unified finance management
     'view_users',
-    'view_analytics'
+    'view_analytics',
+    'view_proposals',
+    'view_documents'
   ],
       'Program Manager': [
         'view_grants',

@@ -32,9 +32,14 @@ const FinancialWorkflowPage: React.FC = () => {
 
   // One-click approve and pay - reduces steps from 2 to 1
   const handleApproveAndPay = async (expenseId: number) => {
+    if (!user) {
+      toast.error('User not authenticated');
+      return;
+    }
+
     try {
       // First approve the expense
-      await approveExpense(expenseId);
+      await approveExpense(expenseId, user.id);
       
       // Then immediately create and process payment
       const expense = pendingExpenses?.find(e => e.id === expenseId);
@@ -64,8 +69,13 @@ const FinancialWorkflowPage: React.FC = () => {
   };
 
   const handleReject = async (expenseId: number) => {
+    if (!user) {
+      toast.error('User not authenticated');
+      return;
+    }
+
     try {
-      await rejectExpense(expenseId);
+      await rejectExpense(expenseId, user.id);
       await refetchExpenses();
       toast.success('Expense rejected');
     } catch (error) {
