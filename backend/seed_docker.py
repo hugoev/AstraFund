@@ -5,8 +5,8 @@ ONLY creates data for the 3 demo users shown on the login page
 """
 
 import os
-import sys
 import random
+import sys
 
 sys.path.append('/app')
 

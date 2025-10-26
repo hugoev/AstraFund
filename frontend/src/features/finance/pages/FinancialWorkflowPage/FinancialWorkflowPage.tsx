@@ -113,19 +113,17 @@ const FinancialWorkflowPage: React.FC = () => {
 
       <div className={styles.tabs}>
         <button
-          className={`${styles.tab} ${activeTab === 'pending' ? styles.active : ''}`}
+          className={`${styles.tab} ${styles.pendingTab} ${activeTab === 'pending' ? styles.active : ''}`}
           onClick={() => setActiveTab('pending')}
         >
-          <span className={styles.tabIcon}>⏳</span>
           Pending Review
           <span className={styles.count}>{pendingExpenses?.length || 0}</span>
         </button>
         
         <button
-          className={`${styles.tab} ${activeTab === 'completed' ? styles.active : ''}`}
+          className={`${styles.tab} ${styles.completedTab} ${activeTab === 'completed' ? styles.active : ''}`}
           onClick={() => setActiveTab('completed')}
         >
-          <span className={styles.tabIcon}>✅</span>
           Completed
           <span className={styles.count}>{completedExpenses.length}</span>
         </button>
