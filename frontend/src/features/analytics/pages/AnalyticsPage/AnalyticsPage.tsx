@@ -133,10 +133,6 @@ const AnalyticsPage: React.FC = () => {
       {trends && (
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Trends & Patterns</h2>
-          <p style={{color: '#888', fontSize: '0.9rem', marginBottom: '1rem'}}>
-            Expense data points: {trends.expense_trends?.length || 0} | 
-            Payment data points: {trends.payment_trends?.length || 0}
-          </p>
           <div className={styles.chartsGrid}>
             <Chart
               title="Expense Trends"
