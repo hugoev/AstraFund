@@ -253,6 +253,17 @@ class RealApiService {
     });
     return response;
   }
+
+  async reviewGrantProposal(grantId: number, proposalText: string, proposalAmount: number): Promise<any> {
+    const response = await this.request(`/grants/${grantId}/review-proposal`, {
+      method: 'POST',
+      body: JSON.stringify({
+        proposal_text: proposalText,
+        proposal_amount: proposalAmount
+      })
+    });
+    return response;
+  }
 }
 
 // Export the appropriate service based on configuration

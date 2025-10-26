@@ -533,6 +533,51 @@ export class MockApiService {
 
     return analysis;
   }
+
+  async reviewGrantProposal(grantId: number, proposalText: string, proposalAmount: number): Promise<any> {
+    await this.simulateDelay();
+    
+    // Mock proposal review based on content
+    let complianceScore = 0.8;
+    let complianceIssues: string[] = [];
+    let recommendations: string[] = [];
+    let riskLevel = 'low';
+
+    // Analyze proposal content
+    if (proposalText.toLowerCase().includes('equipment') && proposalAmount > 10000) {
+      complianceIssues.push("Large equipment purchases may require additional documentation");
+      recommendations.push("Provide detailed equipment specifications and vendor quotes");
+    }
+
+    if (proposalText.toLowerCase().includes('travel') && proposalAmount > 5000) {
+      complianceIssues.push("Travel expenses over $5000 need pre-approval");
+      recommendations.push("Submit travel justification and itinerary");
+    }
+
+    if (proposalText.toLowerCase().includes('consultant') || proposalText.toLowerCase().includes('contractor')) {
+      complianceIssues.push("External contractor expenses require competitive bidding documentation");
+      recommendations.push("Provide contractor qualifications and competitive quotes");
+    }
+
+    if (proposalAmount > 50000) {
+      riskLevel = 'high';
+      complianceIssues.push("Large proposal amount requires additional oversight");
+      recommendations.push("Consider breaking into phases or providing detailed budget breakdown");
+    }
+
+    // Adjust score based on issues
+    if (complianceIssues.length > 0) {
+      complianceScore = Math.max(0.3, complianceScore - (complianceIssues.length * 0.1));
+    }
+
+    return {
+      compliance_score: complianceScore,
+      analysis_summary: `Proposal analysis shows ${complianceScore >= 0.8 ? 'strong' : complianceScore >= 0.6 ? 'moderate' : 'weak'} compliance with grant requirements. ${complianceIssues.length > 0 ? 'Several areas need attention before approval.' : 'Proposal appears ready for review.'}`,
+      compliance_issues: complianceIssues,
+      recommendations: recommendations,
+      risk_level: riskLevel
+    };
+  }
 }
 
 export const mockApiService = new MockApiService();
