@@ -1,41 +1,17 @@
 """
 Expense API endpoints
 """
-from typing import Dict, List
+from typing import List
 
 from app.core.database import get_db
 from app.models.database import Expense as ExpenseModel
 from app.models.database import Grant as GrantModel
-from app.models.schemas import Expense, ExpenseCreate
+from app.models.schemas import Expense
 from app.services.gemini_service import gemini_service
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 router = APIRouter()
-
-
-@router.post("/grants/{grant_id}/expenses", response_model=Expense)
-def create_expense(grant_id: int, expense: ExpenseCreate, db: Session = Depends(get_db)):
-    """Create a new expense for a grant"""
-    # Verify grant exists
-    grant = db.query(GrantModel).filter(GrantModel.id == grant_id).first()
-    if not grant:
-        raise HTTPException(status_code=404, detail="Grant not found")
-    
-    db_expense = ExpenseModel(**expense.dict(), grant_id=grant_id)
-    db.add(db_expense)
-    db.commit()
-    db.refresh(db_expense)
-    return {
-        "id": db_expense.id,
-        "description": db_expense.description,
-        "amount": db_expense.amount,
-        "grant_id": db_expense.grant_id,
-        "submitter_id": db_expense.submitter_id,
-        "status": db_expense.status,
-        "ai_compliance_check": db_expense.ai_compliance_check,
-        "created_at": db_expense.created_at
-    }
 
 
 @router.get("/", response_model=List[Expense])
@@ -70,7 +46,15 @@ def get_pending_expenses(db: Session = Depends(get_db)):
             "submitter_id": expense.submitter_id,
             "status": expense.status,
             "ai_compliance_check": expense.ai_compliance_check,
-            "created_at": expense.created_at
+            "created_at": expense.created_at,
+            "grant": {
+                "id": expense.grant.id,
+                "name": expense.grant.name
+            } if expense.grant else None,
+            "submitter": {
+                "id": expense.submitter.id,
+                "username": expense.submitter.username
+            } if expense.submitter else None
         }
         for expense in expenses
     ]

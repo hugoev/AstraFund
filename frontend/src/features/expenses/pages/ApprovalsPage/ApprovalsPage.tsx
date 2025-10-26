@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import toast from 'react-hot-toast';
 import { ApprovalQueue } from '../../components';
 import { usePendingExpenses } from '../../hooks';
 import styles from './ApprovalsPage.module.css';
+import { useAuth } from '/src/contexts/AuthContext';
 
 const ApprovalsPage: React.FC = () => {
-  const [currentUserId] = useState(1); // Mock user ID
+  const { user } = useAuth();
   const { expenses: pendingExpenses, approveExpense, rejectExpense } = usePendingExpenses();
 
   const handleApproveExpense = async (expenseId: number) => {
-    const result = await approveExpense(expenseId, currentUserId);
+    if (!user) {
+      toast.error('User not authenticated');
+      return;
+    }
+    
+    const result = await approveExpense(expenseId, user.id);
     if (result.success) {
       toast.success('Expense approved successfully!');
     } else {
@@ -18,7 +24,12 @@ const ApprovalsPage: React.FC = () => {
   };
 
   const handleRejectExpense = async (expenseId: number) => {
-    const result = await rejectExpense(expenseId, currentUserId);
+    if (!user) {
+      toast.error('User not authenticated');
+      return;
+    }
+    
+    const result = await rejectExpense(expenseId, user.id);
     if (result.success) {
       toast.success('Expense rejected successfully!');
     } else {
@@ -32,7 +43,7 @@ const ApprovalsPage: React.FC = () => {
         expenses={pendingExpenses}
         onApprove={handleApproveExpense}
         onReject={handleRejectExpense}
-        currentUserId={currentUserId}
+        currentUserId={user?.id || 0}
       />
     </div>
   );

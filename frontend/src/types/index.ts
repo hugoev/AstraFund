@@ -28,6 +28,14 @@ export interface Expense {
     is_compliant: boolean;
     justification: string;
   };
+  grant?: {
+    id: number;
+    name: string;
+  };
+  submitter?: {
+    id: number;
+    username: string;
+  };
 }
 
 export interface Approval {

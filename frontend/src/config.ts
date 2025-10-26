@@ -5,7 +5,9 @@ export const config = {
   // Set to false when backend is ready
   USE_MOCK_API: false,
   
-  // Backend API URL - use localhost when running outside Docker
+  // Backend API URL
+  // In production (Docker with nginx), use empty string for same-origin requests (nginx will proxy)
+  // In development, use direct backend URL
   API_BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
   
   // Mock data delay (ms) - simulates network latency
