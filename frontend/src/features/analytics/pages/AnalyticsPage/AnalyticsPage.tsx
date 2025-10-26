@@ -213,7 +213,9 @@ const AnalyticsPage: React.FC = () => {
 
       {/* AI Chatbot */}
       <Chatbot isOpen={isChatbotOpen} onToggle={toggleChatbot} />
-      <ChatbotToggle onClick={toggleChatbot} isOpen={isChatbotOpen} />
+      <div className={styles.chatbotToggleWrapper}>
+        <ChatbotToggle onClick={toggleChatbot} isOpen={isChatbotOpen} />
+      </div>
     </div>
   );
 };

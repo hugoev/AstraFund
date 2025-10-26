@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 import styles from './LoginForm.module.css';
 
@@ -8,6 +9,7 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,7 +18,10 @@ const LoginForm: React.FC = () => {
 
     try {
       const success = await login(username, password);
-      if (!success) {
+      if (success) {
+        // Redirect to dashboard after successful login
+        navigate('/', { replace: true });
+      } else {
         setError('Invalid username or password');
       }
     } catch (err) {
@@ -121,13 +126,30 @@ const LoginForm: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={async () => {
                     setUsername(cred.username);
                     setPassword(cred.password);
+                    setError('');
+                    setIsLoading(true);
+
+                    try {
+                      const success = await login(cred.username, cred.password);
+                      if (success) {
+                        // Redirect to dashboard after successful login
+                        navigate('/', { replace: true });
+                      } else {
+                        setError('Invalid credentials');
+                      }
+                    } catch (err) {
+                      setError('Login failed. Please try again.');
+                    } finally {
+                      setIsLoading(false);
+                    }
                   }}
                   className={styles.useCredential}
+                  disabled={isLoading}
                 >
-                  Use
+                  {isLoading ? 'Signing In...' : 'Use'}
                 </button>
               </div>
             ))}

@@ -2,6 +2,7 @@
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
+  position: relative;
 }
 
 .header {
@@ -188,5 +189,19 @@
   .chartsGrid,
   .breakdownGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+.chatbotToggleWrapper {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .chatbotToggleWrapper {
+    bottom: 15px;
+    right: 15px;
   }
 }
