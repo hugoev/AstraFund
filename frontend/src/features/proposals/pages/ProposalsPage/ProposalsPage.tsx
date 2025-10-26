@@ -195,3 +195,4 @@ const ProposalsPage: React.FC = () => {
 };
 
 export default ProposalsPage;
+

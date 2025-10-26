@@ -78,3 +78,4 @@ def apply_budget_optimization(
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to apply optimization: {str(e)}")
+

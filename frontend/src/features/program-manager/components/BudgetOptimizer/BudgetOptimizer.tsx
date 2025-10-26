@@ -185,3 +185,4 @@ const BudgetOptimizer: React.FC<BudgetOptimizerProps> = ({
 };
 
 export default BudgetOptimizer;
+

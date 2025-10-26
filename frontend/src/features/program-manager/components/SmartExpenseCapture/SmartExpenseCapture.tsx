@@ -154,3 +154,4 @@ const SmartExpenseCapture: React.FC<SmartExpenseCaptureProps> = ({
 };
 
 export default SmartExpenseCapture;
+

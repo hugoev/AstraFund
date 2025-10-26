@@ -648,7 +648,7 @@ export class MockApiService {
     };
   }
 
-  async reviewProposal(proposalId: number, reviewerId: number, decision: string, reviewNotes?: string): Promise<any> {
+  async reviewProposal(proposalId: number, reviewerId: number, decision: string, _reviewNotes?: string): Promise<any> {
     await this.simulateDelay();
     return {
       message: `Proposal ${decision} successfully`,

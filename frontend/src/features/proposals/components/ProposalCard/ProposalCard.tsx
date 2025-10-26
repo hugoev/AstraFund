@@ -123,3 +123,4 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
 };
 
 export default ProposalCard;
+

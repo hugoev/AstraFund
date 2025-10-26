@@ -1,7 +1,7 @@
 """
 Expense API endpoints
 """
-from typing import List, Dict
+from typing import Dict, List
 
 from app.core.database import get_db
 from app.models.database import Expense as ExpenseModel
@@ -36,6 +36,25 @@ def create_expense(grant_id: int, expense: ExpenseCreate, db: Session = Depends(
         "ai_compliance_check": db_expense.ai_compliance_check,
         "created_at": db_expense.created_at
     }
+
+
+@router.get("/", response_model=List[Expense])
+def get_all_expenses(db: Session = Depends(get_db)):
+    """Get all expenses"""
+    expenses = db.query(ExpenseModel).all()
+    return [
+        {
+            "id": expense.id,
+            "description": expense.description,
+            "amount": expense.amount,
+            "grant_id": expense.grant_id,
+            "submitter_id": expense.submitter_id,
+            "status": expense.status,
+            "ai_compliance_check": expense.ai_compliance_check,
+            "created_at": expense.created_at
+        }
+        for expense in expenses
+    ]
 
 
 @router.get("/queue", response_model=List[Expense])

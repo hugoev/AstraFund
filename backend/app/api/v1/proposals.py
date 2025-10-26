@@ -193,3 +193,4 @@ def get_pending_proposals(db: Session = Depends(get_db)):
         }
         for p in proposals
     ]
+
