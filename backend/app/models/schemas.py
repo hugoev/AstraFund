@@ -85,6 +85,8 @@ class Expense(ExpenseBase):
     status: str
     ai_compliance_check: Optional[dict] = None
     created_at: datetime
+    grant: Optional[dict] = None  # Populated with {id, name} for API responses
+    submitter: Optional[dict] = None  # Populated with {id, username} for API responses
     
     class Config:
         from_attributes = True
