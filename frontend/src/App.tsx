@@ -4,6 +4,7 @@ import styles from './App.module.css';
 import { Header } from './components/layout';
 import { AnalyticsPage } from './features/analytics';
 import { ApprovalsPage, PaymentsPage } from './features/expenses';
+import { FinancialWorkflowPage } from './features/finance';
 import { Dashboard, GrantDetail } from './features/grants';
 import { ProgramManagerDashboard } from './features/program-manager';
 import { ProposalsPage } from './features/proposals';
@@ -29,6 +30,11 @@ function App() {
               <Route path="/grant/:id" element={
                 <ProtectedRoute>
                   <GrantDetail />
+                </ProtectedRoute>
+              } />
+              <Route path="/finance" element={
+                <ProtectedRoute permission="manage_finance">
+                  <FinancialWorkflowPage />
                 </ProtectedRoute>
               } />
               <Route path="/approvals" element={

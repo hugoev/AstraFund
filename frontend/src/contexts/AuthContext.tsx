@@ -25,6 +25,7 @@ const ROLE_PERMISSIONS = {
     'reject_expenses',
     'view_payments',
     'process_payments',
+    'manage_finance', // Unified finance management
     'view_users',
     'view_analytics'
   ],
@@ -46,6 +47,7 @@ const ROLE_PERMISSIONS = {
     'reject_expenses',
     'view_payments',
     'process_payments',
+    'manage_finance', // Unified finance management
     'view_users',
     'create_users',
     'view_analytics',
@@ -61,6 +63,7 @@ const ROLE_PERMISSIONS = {
     'reject_expenses',
     'view_payments',
     'process_payments',
+    'manage_finance', // Unified finance management
     'view_users',
     'create_users',
     'view_analytics',

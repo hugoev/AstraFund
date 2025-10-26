@@ -41,21 +41,12 @@ const Header: React.FC = () => {
             <span>Dashboard</span>
           </Link>
           
-          {hasPermission('approve_expenses') && (
+          {hasPermission('manage_finance') && (
             <Link 
-              to="/approvals" 
-              className={`${styles.navLink} ${location.pathname === '/approvals' ? styles.active : ''}`}
+              to="/finance" 
+              className={`${styles.navLink} ${location.pathname === '/finance' ? styles.active : ''}`}
             >
-              <span>Approvals</span>
-            </Link>
-          )}
-          
-          {hasPermission('process_payments') && (
-            <Link 
-              to="/payments" 
-              className={`${styles.navLink} ${location.pathname === '/payments' ? styles.active : ''}`}
-            >
-              <span>Payments</span>
+              <span>Finance</span>
             </Link>
           )}
           
