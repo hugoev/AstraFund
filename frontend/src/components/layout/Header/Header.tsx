@@ -51,21 +51,21 @@ const Header: React.FC = () => {
           )}
           
           {hasPermission('view_users') && (
-            <Link 
-              to="/users" 
-              className={`${styles.navLink} ${location.pathname === '/users' ? styles.active : ''}`}
-            >
-              <span>Users</span>
-            </Link>
+          <Link 
+            to="/users" 
+            className={`${styles.navLink} ${location.pathname === '/users' ? styles.active : ''}`}
+          >
+            <span>Users</span>
+          </Link>
           )}
           
           {hasPermission('view_analytics') && (
-            <Link 
-              to="/analytics" 
-              className={`${styles.navLink} ${location.pathname === '/analytics' ? styles.active : ''}`}
-            >
-              <span>Analytics</span>
-            </Link>
+          <Link 
+            to="/analytics" 
+            className={`${styles.navLink} ${location.pathname === '/analytics' ? styles.active : ''}`}
+          >
+            <span>Analytics</span>
+          </Link>
           )}
           
         {hasPermission('view_proposals') && (
@@ -110,7 +110,7 @@ const Header: React.FC = () => {
                     }}
                   >
                     Logout
-                  </button>
+          </button>
                 </div>
               )}
             </div>
