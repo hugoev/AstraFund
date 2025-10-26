@@ -19,12 +19,12 @@ const Chart: React.FC<ChartProps> = ({
   title, 
   data, 
   type: _type = 'line', 
-  height = 200, 
+  height = 300, 
   showAmount = true 
 }) => {
   if (!data || data.length === 0) {
     return (
-      <div className={styles.container} style={{ height }}>
+      <div className={styles.container}>
         <h3 className={styles.title}>{title}</h3>
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>📊</div>
@@ -34,8 +34,16 @@ const Chart: React.FC<ChartProps> = ({
     );
   }
 
-  const maxCount = Math.max(...data.map(d => d.count));
-  const maxAmount = Math.max(...data.map(d => d.total_amount));
+  // Deduplicate data by date
+  const uniqueData = data.reduce((acc, item) => {
+    if (!acc.find(d => d.date === item.date)) {
+      acc.push(item);
+    }
+    return acc;
+  }, [] as ChartData[]);
+
+  const maxCount = Math.max(...uniqueData.map(d => d.count), 1);
+  const maxAmount = Math.max(...uniqueData.map(d => d.total_amount), 1);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -46,56 +54,58 @@ const Chart: React.FC<ChartProps> = ({
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
+    if (amount >= 1000) {
+      return `$${(amount / 1000).toFixed(1)}k`;
+    }
+    return `$${amount.toFixed(0)}`;
   };
 
   return (
-    <div className={styles.container} style={{ height }}>
+    <div className={styles.container}>
       <h3 className={styles.title}>{title}</h3>
-      <div className={styles.chartContainer}>
+      
+      <div className={styles.chartWrapper}>
         <div className={styles.chart}>
-          {data.map((item, index) => {
-            const countHeight = (item.count / maxCount) * 100;
-            const amountHeight = showAmount ? (item.total_amount / maxAmount) * 100 : 0;
+          {uniqueData.map((item, index) => {
+            const countPercent = (item.count / maxCount) * 100;
+            const amountPercent = showAmount ? (item.total_amount / maxAmount) * 100 : 0;
             
             return (
-              <div key={index} className={styles.chartItem}>
+              <div key={item.date} className={styles.barGroup}>
                 <div className={styles.bars}>
                   <div 
-                    className={`${styles.bar} ${styles.countBar}`}
-                    style={{ height: `${countHeight}%` }}
-                    title={`Count: ${item.count}`}
+                    className={styles.countBar}
+                    style={{ height: `${Math.max(countPercent, 2)}%` }}
+                    title={`${formatDate(item.date)}\nCount: ${item.count}`}
                   />
                   {showAmount && (
                     <div 
-                      className={`${styles.bar} ${styles.amountBar}`}
-                      style={{ height: `${amountHeight}%` }}
-                      title={`Amount: ${formatCurrency(item.total_amount)}`}
+                      className={styles.amountBar}
+                      style={{ height: `${Math.max(amountPercent, 2)}%` }}
+                      title={`${formatDate(item.date)}\nAmount: ${formatCurrency(item.total_amount)}`}
                     />
                   )}
                 </div>
-                <div className={styles.label}>{formatDate(item.date)}</div>
+                <div className={styles.label}>
+                  {formatDate(item.date)}
+                </div>
               </div>
             );
           })}
         </div>
-        <div className={styles.legend}>
-          <div className={styles.legendItem}>
-            <div className={`${styles.legendColor} ${styles.countColor}`}></div>
-            <span>Count</span>
-          </div>
-          {showAmount && (
-            <div className={styles.legendItem}>
-              <div className={`${styles.legendColor} ${styles.amountColor}`}></div>
-              <span>Amount</span>
-            </div>
-          )}
+      </div>
+
+      <div className={styles.legend}>
+        <div className={styles.legendItem}>
+          <div className={styles.legendDot} style={{ background: '#8B5CF6' }} />
+          <span>Count ({maxCount} max)</span>
         </div>
+        {showAmount && (
+          <div className={styles.legendItem}>
+            <div className={styles.legendDot} style={{ background: '#FFB800' }} />
+            <span>Amount ({formatCurrency(maxAmount)} max)</span>
+          </div>
+        )}
       </div>
     </div>
   );
