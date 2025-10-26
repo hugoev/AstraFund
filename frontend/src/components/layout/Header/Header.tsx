@@ -90,7 +90,7 @@ const Header: React.FC = () => {
             to="/program-manager"
             className={`${styles.navLink} ${location.pathname === '/program-manager' ? styles.active : ''}`}
           >
-            <span>🤖 AI Manager</span>
+            <span>AI Manager</span>
           </Link>
         )}
           
