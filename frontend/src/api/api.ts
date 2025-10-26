@@ -254,14 +254,48 @@ class RealApiService {
     return response;
   }
 
-  async reviewGrantProposal(grantId: number, proposalText: string, proposalAmount: number): Promise<any> {
-    const response = await this.request(`/grants/${grantId}/review-proposal`, {
+  // Grant Proposals API methods
+  async getProposals(status?: string): Promise<GrantProposal[]> {
+    const url = status ? `/proposals?status=${status}` : '/proposals';
+    const response = await this.request<GrantProposal[]>(url);
+    return response;
+  }
+
+  async getProposal(proposalId: number): Promise<GrantProposal> {
+    const response = await this.request<GrantProposal>(`/proposals/${proposalId}`);
+    return response;
+  }
+
+  async createProposal(proposal: Omit<GrantProposal, 'id' | 'status' | 'ai_compliance_score' | 'created_at'>): Promise<GrantProposal> {
+    const response = await this.request<GrantProposal>('/proposals', {
+      method: 'POST',
+      body: JSON.stringify(proposal)
+    });
+    return response;
+  }
+
+  async analyzeProposal(proposalId: number): Promise<ProposalAnalysisResponse> {
+    const response = await this.request<ProposalAnalysisResponse>(`/proposals/${proposalId}/analyze`, {
+      method: 'POST'
+    });
+    return response;
+  }
+
+  async reviewProposal(proposalId: number, reviewerId: number, decision: string, reviewNotes?: string): Promise<any> {
+    const response = await this.request(`/proposals/${proposalId}/review`, {
       method: 'POST',
       body: JSON.stringify({
-        proposal_text: proposalText,
-        proposal_amount: proposalAmount
+        proposal_id: proposalId,
+        reviewer_id: reviewerId,
+        decision,
+        review_notes: reviewNotes
       })
     });
+    return response;
+  }
+
+  async getPendingProposals(): Promise<GrantProposal[]> {
+    const response = await this.request<GrantProposal[]>('/proposals/queue/pending');
     return response;
   }
 }

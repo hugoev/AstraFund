@@ -1,0 +1,264 @@
+.container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  gap: 24px;
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.title {
+  color: #F0F0F0;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #6E44FF, #FFB800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: #B0B0B0;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.stats {
+  display: flex;
+  gap: 16px;
+}
+
+.statCard {
+  background: linear-gradient(135deg, rgba(13, 13, 43, 0.9), rgba(110, 68, 255, 0.1));
+  border: 1px solid rgba(110, 68, 255, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  min-width: 80px;
+}
+
+.statNumber {
+  color: #6E44FF;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  color: #B0B0B0;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filters {
+  margin-bottom: 24px;
+}
+
+.filterTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filterTab {
+  background: rgba(13, 13, 43, 0.5);
+  border: 1px solid rgba(110, 68, 255, 0.3);
+  color: #B0B0B0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filterTab:hover {
+  background: rgba(110, 68, 255, 0.1);
+  border-color: rgba(110, 68, 255, 0.5);
+  color: #F0F0F0;
+}
+
+.filterTab.active {
+  background: linear-gradient(135deg, #6E44FF, #8B5CF6);
+  border-color: #6E44FF;
+  color: white;
+}
+
+.count {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.analysisCard {
+  background: linear-gradient(135deg, rgba(13, 13, 43, 0.9), rgba(110, 68, 255, 0.1));
+  border: 1px solid rgba(110, 68, 255, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.analysisCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6E44FF, #FFB800);
+}
+
+.analysisCard h3 {
+  color: #F0F0F0;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.analysisContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scoreSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scoreLabel {
+  color: #F0F0F0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.score {
+  color: #6E44FF;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.notes {
+  color: #B0B0B0;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.recommendation {
+  color: #F0F0F0;
+  font-weight: 500;
+}
+
+.strengths, .risks {
+  color: #F0F0F0;
+}
+
+.strengths ul, .risks ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+}
+
+.strengths li {
+  color: #22C55E;
+}
+
+.risks li {
+  color: #EF4444;
+}
+
+.proposalsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #B0B0B0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(110, 68, 255, 0.3);
+  border-top: 3px solid #6E44FF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: #B0B0B0;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.emptyState h3 {
+  color: #F0F0F0;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .stats {
+    justify-content: center;
+  }
+  
+  .filterTabs {
+    justify-content: center;
+  }
+  
+  .analysisContent {
+    gap: 16px;
+  }
+}

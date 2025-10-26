@@ -85,6 +85,32 @@ export interface ComplianceDocumentResponse {
   generated_at: string;
 }
 
+// Grant Proposal Types
+export interface GrantProposal {
+  id: number;
+  title: string;
+  description: string;
+  requested_amount: number;
+  organization_name: string;
+  contact_email: string;
+  proposal_type: string;
+  status: 'pending' | 'under_review' | 'approved' | 'rejected';
+  ai_compliance_score: number;
+  ai_compliance_notes?: string;
+  reviewer_id?: number;
+  reviewed_at?: string;
+  created_at: string;
+}
+
+export interface ProposalAnalysisResponse {
+  proposal_id: number;
+  compliance_score: number;
+  compliance_notes: string;
+  recommendation: string;
+  risk_factors: string[];
+  strengths: string[];
+}
+
 export interface ComplianceCheckRequest {
   grant_rules: string;
   expense_description: string;

@@ -534,49 +534,126 @@ export class MockApiService {
     return analysis;
   }
 
-  async reviewGrantProposal(grantId: number, proposalText: string, proposalAmount: number): Promise<any> {
+  // Grant Proposals Mock API methods
+  async getProposals(status?: string): Promise<GrantProposal[]> {
     await this.simulateDelay();
     
-    // Mock proposal review based on content
-    let complianceScore = 0.8;
-    let complianceIssues: string[] = [];
-    let recommendations: string[] = [];
-    let riskLevel = 'low';
+    const mockProposals: GrantProposal[] = [
+      {
+        id: 1,
+        title: "STEM Education Initiative",
+        description: "A comprehensive program to introduce robotics and coding to underserved middle school students.",
+        requested_amount: 25000,
+        organization_name: "TechEd Foundation",
+        contact_email: "contact@techedfoundation.org",
+        proposal_type: "education",
+        status: "pending",
+        ai_compliance_score: 0.0,
+        created_at: "2024-01-20T10:00:00Z"
+      },
+      {
+        id: 2,
+        title: "Community Health Outreach",
+        description: "Mobile health clinic services for rural communities including basic health screenings.",
+        requested_amount: 45000,
+        organization_name: "Rural Health Alliance",
+        contact_email: "info@ruralhealthalliance.org",
+        proposal_type: "healthcare",
+        status: "pending",
+        ai_compliance_score: 0.0,
+        created_at: "2024-01-19T14:30:00Z"
+      },
+      {
+        id: 3,
+        title: "Digital Literacy Training",
+        description: "Computer skills training program for seniors and adults including basic computer operation.",
+        requested_amount: 22000,
+        organization_name: "Digital Inclusion Network",
+        contact_email: "training@digitalinclusion.org",
+        proposal_type: "education",
+        status: "under_review",
+        ai_compliance_score: 0.85,
+        ai_compliance_notes: "Strong alignment with education goals, well-defined objectives, reasonable budget allocation.",
+        created_at: "2024-01-18T09:15:00Z"
+      },
+      {
+        id: 4,
+        title: "Mental Health Support Services",
+        description: "Counseling and support services for individuals experiencing mental health challenges.",
+        requested_amount: 55000,
+        organization_name: "Wellness Center",
+        contact_email: "services@wellnesscenter.org",
+        proposal_type: "healthcare",
+        status: "approved",
+        ai_compliance_score: 0.92,
+        ai_compliance_notes: "Excellent proposal with clear impact metrics, experienced team, and strong community need.",
+        reviewer_id: 1,
+        reviewed_at: "2024-01-15T10:30:00Z",
+        created_at: "2024-01-15T08:00:00Z"
+      }
+    ];
 
-    // Analyze proposal content
-    if (proposalText.toLowerCase().includes('equipment') && proposalAmount > 10000) {
-      complianceIssues.push("Large equipment purchases may require additional documentation");
-      recommendations.push("Provide detailed equipment specifications and vendor quotes");
+    if (status) {
+      return mockProposals.filter(p => p.status === status);
     }
+    return mockProposals;
+  }
 
-    if (proposalText.toLowerCase().includes('travel') && proposalAmount > 5000) {
-      complianceIssues.push("Travel expenses over $5000 need pre-approval");
-      recommendations.push("Submit travel justification and itinerary");
+  async getProposal(proposalId: number): Promise<GrantProposal> {
+    await this.simulateDelay();
+    const proposals = await this.getProposals();
+    const proposal = proposals.find(p => p.id === proposalId);
+    if (!proposal) {
+      throw new Error('Proposal not found');
     }
+    return proposal;
+  }
 
-    if (proposalText.toLowerCase().includes('consultant') || proposalText.toLowerCase().includes('contractor')) {
-      complianceIssues.push("External contractor expenses require competitive bidding documentation");
-      recommendations.push("Provide contractor qualifications and competitive quotes");
-    }
-
-    if (proposalAmount > 50000) {
-      riskLevel = 'high';
-      complianceIssues.push("Large proposal amount requires additional oversight");
-      recommendations.push("Consider breaking into phases or providing detailed budget breakdown");
-    }
-
-    // Adjust score based on issues
-    if (complianceIssues.length > 0) {
-      complianceScore = Math.max(0.3, complianceScore - (complianceIssues.length * 0.1));
-    }
-
+  async createProposal(proposal: Omit<GrantProposal, 'id' | 'status' | 'ai_compliance_score' | 'created_at'>): Promise<GrantProposal> {
+    await this.simulateDelay();
     return {
-      compliance_score: complianceScore,
-      analysis_summary: `Proposal analysis shows ${complianceScore >= 0.8 ? 'strong' : complianceScore >= 0.6 ? 'moderate' : 'weak'} compliance with grant requirements. ${complianceIssues.length > 0 ? 'Several areas need attention before approval.' : 'Proposal appears ready for review.'}`,
-      compliance_issues: complianceIssues,
-      recommendations: recommendations,
-      risk_level: riskLevel
+      ...proposal,
+      id: Date.now(),
+      status: 'pending',
+      ai_compliance_score: 0.0,
+      created_at: new Date().toISOString()
     };
+  }
+
+  async analyzeProposal(proposalId: number): Promise<ProposalAnalysisResponse> {
+    await this.simulateDelay();
+    
+    return {
+      proposal_id: proposalId,
+      compliance_score: 0.85,
+      compliance_notes: "Strong proposal with clear objectives and reasonable budget. Minor concerns about timeline implementation.",
+      recommendation: "approve",
+      risk_factors: [
+        "Implementation timeline may be ambitious",
+        "Limited experience with target demographic"
+      ],
+      strengths: [
+        "Clear measurable outcomes",
+        "Experienced team",
+        "Strong community partnerships",
+        "Reasonable budget allocation"
+      ]
+    };
+  }
+
+  async reviewProposal(proposalId: number, reviewerId: number, decision: string, reviewNotes?: string): Promise<any> {
+    await this.simulateDelay();
+    return {
+      message: `Proposal ${decision} successfully`,
+      proposal_id: proposalId,
+      status: decision,
+      reviewer_id: reviewerId,
+      reviewed_at: new Date().toISOString()
+    };
+  }
+
+  async getPendingProposals(): Promise<GrantProposal[]> {
+    return this.getProposals('pending');
   }
 }
 

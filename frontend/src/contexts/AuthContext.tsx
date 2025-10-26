@@ -28,15 +28,16 @@ const ROLE_PERMISSIONS = {
     'view_users',
     'view_analytics'
   ],
-  'Program Manager': [
-    'view_grants',
-    'create_grants',
-    'view_expenses',
-    'create_expenses',
-    'view_payments',
-    'create_payments',
-    'view_documents'
-  ],
+      'Program Manager': [
+        'view_grants',
+        'create_grants',
+        'view_expenses',
+        'create_expenses',
+        'view_payments',
+        'create_payments',
+        'view_documents',
+        'view_proposals'
+      ],
   'Executive Director': [
     'view_grants',
     'create_grants',
@@ -48,7 +49,8 @@ const ROLE_PERMISSIONS = {
     'view_users',
     'create_users',
     'view_analytics',
-    'view_documents'
+    'view_documents',
+    'view_proposals'
   ],
   'Administrator': [
     'view_grants',
@@ -62,7 +64,8 @@ const ROLE_PERMISSIONS = {
     'view_users',
     'create_users',
     'view_analytics',
-    'view_documents'
+    'view_documents',
+    'view_proposals'
   ]
 };
 

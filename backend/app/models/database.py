@@ -12,15 +12,16 @@ from sqlalchemy.orm import relationship
 class User(Base):
     """User model"""
     __tablename__ = "users"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
     role = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    
+
     # Relationships
     expenses = relationship("Expense", back_populates="submitter")
     approvals = relationship("Approval", back_populates="approver")
+    reviewed_proposals = relationship("GrantProposal", back_populates="reviewer")
 
 
 class Grant(Base):
@@ -92,7 +93,7 @@ class Payment(Base):
 class Document(Base):
     """Document model for AI document intelligence"""
     __tablename__ = "documents"
-    
+
     id = Column(String, primary_key=True, index=True)
     filename = Column(String, nullable=False)
     document_type = Column(String, nullable=False)  # receipt, contract, invoice, etc.
@@ -101,6 +102,28 @@ class Document(Base):
     confidence_score = Column(Float, default=0.0)
     processing_status = Column(String, default="pending")  # pending, processing, completed, failed
     created_at = Column(DateTime, default=datetime.utcnow)
-    
+
     # Relationships
     grant = relationship("Grant", back_populates="documents")
+
+
+class GrantProposal(Base):
+    """Grant proposal model for incoming proposals"""
+    __tablename__ = "grant_proposals"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    requested_amount = Column(Float, nullable=False)
+    organization_name = Column(String, nullable=False)
+    contact_email = Column(String, nullable=False)
+    proposal_type = Column(String, nullable=False)  # education, healthcare, environment, etc.
+    status = Column(String, default="pending")  # pending, approved, rejected, under_review
+    ai_compliance_score = Column(Float, default=0.0)
+    ai_compliance_notes = Column(Text, nullable=True)
+    reviewer_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    reviewed_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Relationships
+    reviewer = relationship("User", back_populates="reviewed_proposals")

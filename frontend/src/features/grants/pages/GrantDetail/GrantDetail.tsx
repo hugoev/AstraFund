@@ -3,7 +3,6 @@ import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiService } from '../../../../api';
 import { ExpenseForm, PaymentForm } from '../../../expenses';
-import ProposalReview from '../../components/ProposalReview';
 import { useGrant } from '../../hooks';
 import styles from './GrantDetail.module.css';
 import { ErrorMessage, LoadingSpinner } from '/src/components/common';
@@ -114,15 +113,6 @@ const GrantDetail: React.FC = () => {
           onSubmit={handleExpenseSubmit}
           onComplianceCheck={handleComplianceCheck}
           currentUserId={currentUserId}
-        />
-
-        <ProposalReview
-          grantId={grant.id}
-          grantName={grant.name}
-          onProposalReviewed={(result) => {
-            console.log('Proposal reviewed:', result);
-            toast.success('Proposal review completed!');
-          }}
         />
 
         <div className={styles.expenses}>

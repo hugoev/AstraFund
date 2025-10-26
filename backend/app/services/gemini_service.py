@@ -357,34 +357,38 @@ Proposed Expense: A purchase of '{expense_description}' for ${expense_amount}.""
                 "warnings": ["Service unavailable"]
             }
 
-    def review_grant_proposal(self, grant_rules: str, proposal_text: str, proposal_amount: float) -> Dict:
-        """Review a grant proposal for compliance"""
+    def analyze_proposal_compliance(self, title: str, description: str, requested_amount: float, proposal_type: str) -> Dict:
+        """Analyze a grant proposal for compliance and quality"""
         try:
-            system_prompt = """You are a financial compliance co-pilot for nonprofits. Your job is to review grant proposals and determine if they comply with grant rules."""
+            system_prompt = """You are an expert grant proposal reviewer for nonprofit organizations. Your job is to analyze proposals for compliance, quality, and alignment with funding criteria."""
 
             user_prompt = f"""
-            Grant Rules:
-            {grant_rules}
+            Analyze this grant proposal for compliance and quality:
 
-            Proposal Details:
-            Description: {proposal_text}
-            Amount: ${proposal_amount}
+            Title: {title}
+            Type: {proposal_type}
+            Requested Amount: ${requested_amount:,.2f}
+            Description: {description}
 
-            Analyze this proposal and provide:
-            1. Overall compliance assessment (score 0-1)
-            2. Detailed analysis of compliance
-            3. Specific compliance issues (if any)
-            4. Recommendations for improvement
-            5. Risk assessment
+            Provide analysis in JSON format with:
+            1. compliance_score (0.0-1.0)
+            2. compliance_notes (detailed analysis)
+            3. recommendation (approve/reject/conditional)
+            4. risk_factors (list of concerns)
+            5. strengths (list of positive aspects)
 
-            Return your analysis in JSON format with fields: compliance_score, analysis_summary, compliance_issues, recommendations, risk_level
+            Focus on:
+            - Alignment with proposal type
+            - Reasonableness of requested amount
+            - Clarity and completeness of description
+            - Potential compliance issues
             """
 
             response = self.client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=user_prompt,
                 generation_config={
-                    "temperature": 0.2,
+                    "temperature": 0.3,
                     "top_p": 0.8,
                     "top_k": 40,
                     "max_output_tokens": 1024,
@@ -393,25 +397,25 @@ Proposed Expense: A purchase of '{expense_description}' for ${expense_amount}.""
 
             # Parse JSON response
             try:
-                review = json.loads(response.text)
-                return review
+                analysis = json.loads(response.text)
+                return analysis
             except json.JSONDecodeError:
                 return {
-                    "compliance_score": 0.0,
-                    "analysis_summary": "Unable to analyze proposal",
-                    "compliance_issues": ["AI analysis failed"],
-                    "recommendations": ["Manual review required"],
-                    "risk_level": "high"
+                    "compliance_score": 0.5,
+                    "compliance_notes": "Unable to analyze proposal - AI response parsing failed",
+                    "recommendation": "conditional",
+                    "risk_factors": ["Analysis failed"],
+                    "strengths": []
                 }
 
         except Exception as e:
-            logger.error(f"Error reviewing grant proposal: {str(e)}")
+            logger.error(f"Error analyzing proposal compliance: {str(e)}")
             return {
                 "compliance_score": 0.0,
-                "analysis_summary": f"Proposal review failed: {str(e)}",
-                "compliance_issues": ["Service unavailable"],
-                "recommendations": ["Contact administrator"],
-                "risk_level": "high"
+                "compliance_notes": f"Analysis failed: {str(e)}",
+                "recommendation": "reject",
+                "risk_factors": ["Service unavailable"],
+                "strengths": []
             }
 
 

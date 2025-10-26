@@ -6,7 +6,6 @@ from typing import List
 from app.core.database import get_db
 from app.models.database import Grant as GrantModel
 from app.models.schemas import Grant, GrantCreate, GrantWithExpenses
-from app.services.gemini_service import gemini_service
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -74,30 +73,3 @@ def get_grant(grant_id: int, db: Session = Depends(get_db)):
         ]
     }
     return grant_data
-
-
-@router.post("/{grant_id}/review-proposal")
-async def review_grant_proposal(
-    grant_id: int,
-    proposal_text: str,
-    proposal_amount: float,
-    db: Session = Depends(get_db)
-):
-    """AI Co-Pilot: Review a grant proposal for compliance"""
-    try:
-        # Get the grant and its rules
-        grant = db.query(GrantModel).filter(GrantModel.id == grant_id).first()
-        if not grant:
-            raise HTTPException(status_code=404, detail="Grant not found")
-        
-        # Get AI review
-        review = gemini_service.review_grant_proposal(
-            grant.rules_text,
-            proposal_text,
-            proposal_amount
-        )
-        
-        return review
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Proposal review failed: {str(e)}")

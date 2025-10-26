@@ -118,3 +118,37 @@ class ComplianceCheckRequest(BaseModel):
 class ComplianceCheckResponse(BaseModel):
     is_compliant: bool
     justification: str
+
+
+# Grant Proposal Schemas
+class GrantProposalBase(BaseModel):
+    title: str
+    description: str
+    requested_amount: float
+    organization_name: str
+    contact_email: str
+    proposal_type: str
+
+
+class GrantProposalCreate(GrantProposalBase):
+    pass
+
+
+class GrantProposal(GrantProposalBase):
+    id: int
+    status: str
+    ai_compliance_score: float
+    ai_compliance_notes: Optional[str] = None
+    reviewer_id: Optional[int] = None
+    reviewed_at: Optional[str] = None
+    created_at: str
+
+    class Config:
+        from_attributes = True
+
+
+class ProposalReviewRequest(BaseModel):
+    proposal_id: int
+    reviewer_id: int
+    decision: str  # approved, rejected
+    review_notes: Optional[str] = None

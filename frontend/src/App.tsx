@@ -6,6 +6,7 @@ import { AnalyticsPage } from './features/analytics';
 import { DocumentsPage } from './features/documents';
 import { ApprovalsPage, PaymentsPage } from './features/expenses';
 import { Dashboard, GrantDetail } from './features/grants';
+import { ProposalsPage } from './features/proposals';
 import { UsersPage } from './features/users';
 import { ProtectedRoute } from '/src/components/auth';
 import { GalaxyBackground } from '/src/components/common';
@@ -50,11 +51,16 @@ function App() {
                   <AnalyticsPage />
                 </ProtectedRoute>
               } />
-              <Route path="/documents" element={
-                <ProtectedRoute permission="view_documents">
-                  <DocumentsPage />
-                </ProtectedRoute>
-              } />
+            <Route path="/documents" element={
+              <ProtectedRoute permission="view_documents">
+                <DocumentsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/proposals" element={
+              <ProtectedRoute permission="view_proposals">
+                <ProposalsPage />
+              </ProtectedRoute>
+            } />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
