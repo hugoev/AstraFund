@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { Grant } from '../../../../types';
+import CoPilotAssistant from '../CoPilotAssistant';
 import styles from './ExpenseForm.module.css';
 
 interface ExpenseFormProps {
@@ -88,15 +89,21 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
         />
       </div>
 
-      <div className={styles.actions}>
-        <button
-          onClick={handleComplianceCheck}
-          disabled={isLoading || !description.trim() || !amount.trim()}
-          className={styles.checkButton}
-        >
-          {isLoading ? 'Checking...' : 'Check Compliance'}
-        </button>
-      </div>
+      {/* Co-Pilot Assistant - Primary Compliance Checker */}
+      <CoPilotAssistant
+        expenseDescription={description}
+        expenseAmount={parseFloat(amount) || 0}
+        onSuggestionReceived={(suggestion) => {
+          console.log('Co-pilot suggestion:', suggestion);
+          // Auto-populate compliance result from co-pilot
+          if (suggestion.recommended_grant_id) {
+            setComplianceResult({
+              is_compliant: suggestion.confidence_score >= 0.6,
+              justification: suggestion.compliance_notes
+            });
+          }
+        }}
+      />
 
       {complianceResult && (
         <div className={`${styles.complianceResult} ${complianceResult.is_compliant ? styles.compliant : styles.nonCompliant}`}>

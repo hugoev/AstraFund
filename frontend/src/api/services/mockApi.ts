@@ -502,6 +502,37 @@ export class MockApiService {
       ]
     };
   }
+
+  // Co-Pilot Mock API methods
+  async suggestExpenseAllocation(description: string, amount: number): Promise<any> {
+    await this.simulateDelay();
+    
+    // Mock AI analysis based on expense description
+    const analysis = {
+      recommended_grant_id: 1,
+      confidence_score: 0.85,
+      compliance_notes: "This expense appears suitable for STEM Education grant based on technology focus",
+      alternatives: [
+        "Consider Technology Infrastructure grant for hardware over $500",
+        "Split expense across multiple grants if needed"
+      ],
+      warnings: amount > 1000 ? ["Large expense - may need pre-approval"] : []
+    };
+
+    // Adjust recommendation based on expense type
+    if (description.toLowerCase().includes('laptop') || description.toLowerCase().includes('computer')) {
+      analysis.recommended_grant_id = 1; // STEM Education
+      analysis.compliance_notes = "Hardware purchase suitable for STEM Education grant";
+    } else if (description.toLowerCase().includes('training') || description.toLowerCase().includes('workshop')) {
+      analysis.recommended_grant_id = 2; // Professional Development
+      analysis.compliance_notes = "Training expense fits Professional Development grant criteria";
+    } else if (description.toLowerCase().includes('office') || description.toLowerCase().includes('supplies')) {
+      analysis.recommended_grant_id = 3; // General Operations
+      analysis.compliance_notes = "Administrative expense suitable for General Operations grant";
+    }
+
+    return analysis;
+  }
 }
 
 export const mockApiService = new MockApiService();

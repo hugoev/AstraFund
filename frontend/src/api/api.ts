@@ -241,6 +241,18 @@ class RealApiService {
     const response = await this.request<Document[]>(`/documents/grant/${grantId}`);
     return response;
   }
+
+  // Co-Pilot API methods
+  async suggestExpenseAllocation(description: string, amount: number): Promise<any> {
+    const response = await this.request('/expenses/copilot/suggest-allocation', {
+      method: 'POST',
+      body: JSON.stringify({
+        expense_description: description,
+        expense_amount: amount
+      })
+    });
+    return response;
+  }
 }
 
 // Export the appropriate service based on configuration

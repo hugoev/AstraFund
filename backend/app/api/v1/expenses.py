@@ -1,12 +1,13 @@
 """
 Expense API endpoints
 """
-from typing import List
+from typing import List, Dict
 
 from app.core.database import get_db
 from app.models.database import Expense as ExpenseModel
 from app.models.database import Grant as GrantModel
 from app.models.schemas import Expense, ExpenseCreate
+from app.services.gemini_service import gemini_service
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -78,3 +79,37 @@ def reject_expense(expense_id: int, approver_id: int, db: Session = Depends(get_
     expense.status = "rejected"
     db.commit()
     return {"message": "Expense rejected successfully"}
+
+
+@router.post("/copilot/suggest-allocation")
+async def suggest_expense_allocation(
+    expense_description: str,
+    expense_amount: float,
+    db: Session = Depends(get_db)
+):
+    """AI Co-Pilot: Suggest the best grant allocation for an expense"""
+    try:
+        # Get all available grants with their rules and remaining amounts
+        grants = db.query(GrantModel).all()
+        
+        grants_data = []
+        for grant in grants:
+            # Calculate remaining amount (simplified - in real app, subtract approved expenses)
+            grants_data.append({
+                "id": grant.id,
+                "name": grant.name,
+                "rules_text": grant.rules_text,
+                "remaining_amount": grant.total_amount  # Simplified for demo
+            })
+        
+        # Get AI suggestion
+        suggestion = gemini_service.suggest_expense_allocation(
+            expense_description, 
+            expense_amount, 
+            grants_data
+        )
+        
+        return suggestion
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Co-pilot analysis failed: {str(e)}")

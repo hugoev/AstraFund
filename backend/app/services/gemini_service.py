@@ -270,15 +270,15 @@ Proposed Expense: A purchase of '{expense_description}' for ${expense_amount}.""
         """Extract key requirements from grant rules"""
         try:
             system_prompt = """You are an expert at analyzing grant rules and extracting key compliance requirements."""
-            
+
             user_prompt = f"""
             Extract the key compliance requirements from this grant rules text:
-            
+
             {rules_text}
-            
+
             Return a list of specific, actionable requirements. Each requirement should be clear and measurable.
             """
-            
+
             response = self.client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=user_prompt,
@@ -289,14 +289,130 @@ Proposed Expense: A purchase of '{expense_description}' for ${expense_amount}.""
                     "max_output_tokens": 512,
                 }
             )
-            
+
             # Parse response into list
             requirements = response.text.strip().split('\n')
             return [req.strip('- ').strip() for req in requirements if req.strip()]
-            
+
         except Exception as e:
             logger.error(f"Error extracting requirements: {str(e)}")
             return ["Unable to extract requirements at this time."]
+
+    def suggest_expense_allocation(self, expense_description: str, expense_amount: float, available_grants: List[Dict]) -> Dict:
+        """Suggest the best grant allocation for an expense"""
+        try:
+            grants_info = "\n".join([
+                f"Grant: {grant['name']} - Rules: {grant['rules_text'][:200]}... - Remaining: ${grant.get('remaining_amount', 0)}"
+                for grant in available_grants
+            ])
+
+            system_prompt = """You are a financial compliance co-pilot for nonprofits. Your job is to suggest the best grant allocation for expenses while ensuring compliance."""
+
+            user_prompt = f"""
+            Expense: {expense_description} for ${expense_amount}
+
+            Available Grants:
+            {grants_info}
+
+            Analyze this expense and suggest:
+            1. Which grant is most appropriate (or if none are suitable)
+            2. Any compliance concerns
+            3. Alternative approaches if needed
+            4. Confidence level in the recommendation
+
+            Return your analysis in JSON format with fields: recommended_grant_id, confidence_score, compliance_notes, alternatives, warnings
+            """
+
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=user_prompt,
+                generation_config={
+                    "temperature": 0.3,
+                    "top_p": 0.8,
+                    "top_k": 40,
+                    "max_output_tokens": 1024,
+                }
+            )
+
+            # Parse JSON response
+            try:
+                suggestion = json.loads(response.text)
+                return suggestion
+            except json.JSONDecodeError:
+                return {
+                    "recommended_grant_id": None,
+                    "confidence_score": 0.0,
+                    "compliance_notes": "Unable to analyze expense",
+                    "alternatives": [],
+                    "warnings": ["AI analysis failed"]
+                }
+
+        except Exception as e:
+            logger.error(f"Error suggesting expense allocation: {str(e)}")
+            return {
+                "recommended_grant_id": None,
+                "confidence_score": 0.0,
+                "compliance_notes": f"Analysis failed: {str(e)}",
+                "alternatives": [],
+                "warnings": ["Service unavailable"]
+            }
+
+    def review_grant_proposal(self, grant_rules: str, proposal_text: str, proposal_amount: float) -> Dict:
+        """Review a grant proposal for compliance"""
+        try:
+            system_prompt = """You are a financial compliance co-pilot for nonprofits. Your job is to review grant proposals and determine if they comply with grant rules."""
+
+            user_prompt = f"""
+            Grant Rules:
+            {grant_rules}
+
+            Proposal Details:
+            Description: {proposal_text}
+            Amount: ${proposal_amount}
+
+            Analyze this proposal and provide:
+            1. Overall compliance assessment (score 0-1)
+            2. Detailed analysis of compliance
+            3. Specific compliance issues (if any)
+            4. Recommendations for improvement
+            5. Risk assessment
+
+            Return your analysis in JSON format with fields: compliance_score, analysis_summary, compliance_issues, recommendations, risk_level
+            """
+
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=user_prompt,
+                generation_config={
+                    "temperature": 0.2,
+                    "top_p": 0.8,
+                    "top_k": 40,
+                    "max_output_tokens": 1024,
+                }
+            )
+
+            # Parse JSON response
+            try:
+                review = json.loads(response.text)
+                return review
+            except json.JSONDecodeError:
+                return {
+                    "compliance_score": 0.0,
+                    "analysis_summary": "Unable to analyze proposal",
+                    "compliance_issues": ["AI analysis failed"],
+                    "recommendations": ["Manual review required"],
+                    "risk_level": "high"
+                }
+
+        except Exception as e:
+            logger.error(f"Error reviewing grant proposal: {str(e)}")
+            return {
+                "compliance_score": 0.0,
+                "analysis_summary": f"Proposal review failed: {str(e)}",
+                "compliance_issues": ["Service unavailable"],
+                "recommendations": ["Contact administrator"],
+                "risk_level": "high"
+            }
 
 
 # Global service instance

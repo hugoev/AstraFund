@@ -34,7 +34,8 @@ const ROLE_PERMISSIONS = {
     'view_expenses',
     'create_expenses',
     'view_payments',
-    'create_payments'
+    'create_payments',
+    'view_documents'
   ],
   'Executive Director': [
     'view_grants',
@@ -46,7 +47,8 @@ const ROLE_PERMISSIONS = {
     'process_payments',
     'view_users',
     'create_users',
-    'view_analytics'
+    'view_analytics',
+    'view_documents'
   ],
   'Administrator': [
     'view_grants',
@@ -59,7 +61,8 @@ const ROLE_PERMISSIONS = {
     'process_payments',
     'view_users',
     'create_users',
-    'view_analytics'
+    'view_analytics',
+    'view_documents'
   ]
 };
 
