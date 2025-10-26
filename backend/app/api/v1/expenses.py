@@ -107,13 +107,21 @@ def auto_approve_compliant(db: Session = Depends(get_db)):
     }
 
 
+from pydantic import BaseModel
+
+
+class ExpenseAllocationRequest(BaseModel):
+    expense_description: str
+    expense_amount: float
+
 @router.post("/copilot/suggest-allocation")
 async def suggest_expense_allocation(
-    expense_description: str,
-    expense_amount: float,
+    request: ExpenseAllocationRequest,
     db: Session = Depends(get_db)
 ):
     """AI Co-Pilot: Suggest the best grant allocation for an expense"""
+    expense_description = request.expense_description
+    expense_amount = request.expense_amount
     try:
         # Get all available grants with their rules and remaining amounts
         grants = db.query(GrantModel).all()

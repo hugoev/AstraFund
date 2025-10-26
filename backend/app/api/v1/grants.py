@@ -85,7 +85,9 @@ def create_expense(grant_id: int, expense: ExpenseCreate, db: Session = Depends(
     if not grant:
         raise HTTPException(status_code=404, detail="Grant not found")
     
-    db_expense = ExpenseModel(**expense.dict(), grant_id=grant_id)
+    # Exclude grant_id from expense dict to avoid duplicate parameter
+    expense_data = expense.dict(exclude={'grant_id'})
+    db_expense = ExpenseModel(**expense_data, grant_id=grant_id)
     db.add(db_expense)
     db.commit()
     db.refresh(db_expense)

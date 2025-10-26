@@ -263,7 +263,7 @@ def seed_database():
                     timestamp=approval_timestamp
                 )
                 approvals.append(approval)
-                db.add(approval)
+            db.add(approval)
         
         db.commit()
         print(f"✅ Created {len(approvals)} approvals")

@@ -300,6 +300,45 @@ Proposed Expense: A purchase of '{expense_description}' for ${expense_amount}.""
 
     def suggest_expense_allocation(self, expense_description: str, expense_amount: float, available_grants: List[Dict]) -> Dict:
         """Suggest the best grant allocation for an expense"""
+        # Demo mode - return mock suggestion
+        if not self.client:
+            logger.info("Running in demo mode - returning mock expense allocation suggestion")
+            # Smart matching based on keywords
+            description_lower = expense_description.lower()
+            
+            # Try to find best matching grant
+            best_match = None
+            for grant in available_grants:
+                grant_name_lower = grant['name'].lower()
+                if any(keyword in description_lower for keyword in ['laptop', 'computer', 'technology', 'stem', 'science', 'math']):
+                    if 'stem' in grant_name_lower or 'education' in grant_name_lower:
+                        best_match = grant
+                        break
+                elif any(keyword in description_lower for keyword in ['art', 'music', 'theater', 'creative']):
+                    if 'arts' in grant_name_lower or 'culture' in grant_name_lower:
+                        best_match = grant
+                        break
+                elif any(keyword in description_lower for keyword in ['youth', 'student', 'leadership']):
+                    if 'youth' in grant_name_lower or 'development' in grant_name_lower:
+                        best_match = grant
+                        break
+                elif any(keyword in description_lower for keyword in ['health', 'medical', 'wellness']):
+                    if 'health' in grant_name_lower:
+                        best_match = grant
+                        break
+                        
+            if not best_match and available_grants:
+                best_match = available_grants[0]
+                
+            return {
+                "recommended_grant_id": best_match['id'] if best_match else None,
+                "recommended_grant_name": best_match['name'] if best_match else None,
+                "confidence_score": 0.85 if best_match else 0.0,
+                "compliance_notes": f"✅ This expense appears to align well with {best_match['name'] if best_match else 'available grants'}. The description suggests it meets the grant's funding criteria." if best_match else "No suitable grant found",
+                "alternatives": [g['name'] for g in available_grants[:2] if g != best_match] if best_match else [],
+                "warnings": []
+            }
+        
         try:
             grants_info = "\n".join([
                 f"Grant: {grant['name']} - Rules: {grant['rules_text'][:200]}... - Remaining: ${grant.get('remaining_amount', 0)}"
