@@ -1,8 +1,9 @@
 """
 AstraFund API - Main application
 """
-from app.api.v1 import (analytics, approvals, chatbot, compliance, documents,
-                        expenses, grants, payments, proposals, users)
+from app.api.v1 import (analytics, approvals, budget, chatbot, compliance,
+                        documents, expenses, grants, payments, proposals,
+                        users)
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.core.exceptions import setup_exception_handlers
@@ -49,6 +50,7 @@ app.include_router(analytics.router, prefix="/analytics", tags=["analytics"])
 app.include_router(chatbot.router, prefix="/chatbot", tags=["chatbot"])
 app.include_router(documents.router, prefix="/documents", tags=["documents"])
 app.include_router(proposals.router, prefix="/proposals", tags=["proposals"])
+app.include_router(budget.router, prefix="/budget", tags=["budget"])
 
 
 @app.get("/")

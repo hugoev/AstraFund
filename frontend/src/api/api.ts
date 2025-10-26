@@ -9,8 +9,10 @@ import type {
   DocumentUploadResponse,
   Expense,
   Grant,
+  GrantProposal,
   GrantWithExpenses,
   Payment,
+  ProposalAnalysisResponse,
   User,
 } from '../types';
 import { mockApiService } from './services/mockApi';
@@ -85,6 +87,10 @@ class RealApiService {
   // Expense endpoints
   async getPendingExpenses(): Promise<Expense[]> {
     return this.request<Expense[]>('/expenses/queue/');
+  }
+
+  async getExpenses(): Promise<Expense[]> {
+    return this.request<Expense[]>('/expenses/');
   }
 
   async approveExpense(expenseId: number, approverId: number): Promise<Approval> {
@@ -296,6 +302,20 @@ class RealApiService {
 
   async getPendingProposals(): Promise<GrantProposal[]> {
     const response = await this.request<GrantProposal[]>('/proposals/queue/pending');
+    return response;
+  }
+
+  // Budget Optimization API methods
+  async getBudgetOptimization(): Promise<any[]> {
+    const response = await this.request<any[]>('/budget/optimization');
+    return response;
+  }
+
+  async applyBudgetOptimization(grantId: number, optimization: any): Promise<any> {
+    const response = await this.request(`/budget/optimization/${grantId}/apply`, {
+      method: 'POST',
+      body: JSON.stringify(optimization)
+    });
     return response;
   }
 }

@@ -6,6 +6,7 @@ import { AnalyticsPage } from './features/analytics';
 import { DocumentsPage } from './features/documents';
 import { ApprovalsPage, PaymentsPage } from './features/expenses';
 import { Dashboard, GrantDetail } from './features/grants';
+import { ProgramManagerDashboard } from './features/program-manager';
 import { ProposalsPage } from './features/proposals';
 import { UsersPage } from './features/users';
 import { ProtectedRoute } from '/src/components/auth';
@@ -59,6 +60,11 @@ function App() {
             <Route path="/proposals" element={
               <ProtectedRoute permission="view_proposals">
                 <ProposalsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/program-manager" element={
+              <ProtectedRoute permission="create_expenses">
+                <ProgramManagerDashboard />
               </ProtectedRoute>
             } />
               <Route path="*" element={<Navigate to="/" replace />} />

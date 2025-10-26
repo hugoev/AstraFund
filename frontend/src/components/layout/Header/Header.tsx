@@ -93,6 +93,14 @@ const Header: React.FC = () => {
             <span>Proposals</span>
           </Link>
         )}
+        {hasPermission('create_expenses') && (
+          <Link
+            to="/program-manager"
+            className={`${styles.navLink} ${location.pathname === '/program-manager' ? styles.active : ''}`}
+          >
+            <span>🤖 AI Manager</span>
+          </Link>
+        )}
           
           {user && (
             <div className={styles.userSection}>

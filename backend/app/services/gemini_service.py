@@ -418,6 +418,94 @@ Proposed Expense: A purchase of '{expense_description}' for ${expense_amount}.""
                 "strengths": []
             }
 
+    def get_budget_optimization_suggestions(self, grant_name: str, total_budget: float, current_spent: float, remaining: float, grant_rules: str) -> Dict:
+        """Get AI-powered budget optimization suggestions"""
+        try:
+            utilization_rate = (current_spent / total_budget) * 100 if total_budget > 0 else 0
+            
+            system_prompt = """You are an expert financial advisor for nonprofit organizations. Your job is to analyze budget utilization and provide optimization suggestions."""
+
+            user_prompt = f"""
+            Analyze this grant's budget utilization and provide optimization suggestions:
+
+            Grant: {grant_name}
+            Total Budget: ${total_budget:,.2f}
+            Current Spent: ${current_spent:,.2f}
+            Remaining: ${remaining:,.2f}
+            Utilization Rate: {utilization_rate:.1f}%
+
+            Grant Rules: {grant_rules[:500]}...
+
+            Provide optimization suggestions in JSON format with:
+            1. suggestions (list of optimization recommendations)
+            2. risk_level (low/medium/high)
+            3. confidence_score (0.0-1.0)
+
+            Each suggestion should have:
+            - type (increase/decrease/reallocate)
+            - amount (suggested change amount)
+            - reason (explanation)
+            - impact (expected outcome)
+            """
+
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=user_prompt,
+                generation_config={
+                    "temperature": 0.3,
+                    "top_p": 0.8,
+                    "top_k": 40,
+                    "max_output_tokens": 1024,
+                }
+            )
+
+            # Parse JSON response
+            try:
+                suggestions = json.loads(response.text)
+                return suggestions
+            except json.JSONDecodeError:
+                # Fallback suggestions based on utilization rate
+                if utilization_rate < 30:
+                    return {
+                        "suggestions": [
+                            {
+                                "type": "increase",
+                                "amount": total_budget * 0.1,
+                                "reason": "Low utilization rate suggests opportunity to increase program impact",
+                                "impact": "Could expand program reach by 20%"
+                            }
+                        ],
+                        "risk_level": "low",
+                        "confidence_score": 0.7
+                    }
+                elif utilization_rate > 80:
+                    return {
+                        "suggestions": [
+                            {
+                                "type": "decrease",
+                                "amount": total_budget * 0.05,
+                                "reason": "High utilization rate - consider cost optimization",
+                                "impact": "Could reduce costs by 5% without impacting program quality"
+                            }
+                        ],
+                        "risk_level": "medium",
+                        "confidence_score": 0.8
+                    }
+                else:
+                    return {
+                        "suggestions": [],
+                        "risk_level": "low",
+                        "confidence_score": 0.9
+                    }
+
+        except Exception as e:
+            logger.error(f"Error getting budget optimization suggestions: {str(e)}")
+            return {
+                "suggestions": [],
+                "risk_level": "medium",
+                "confidence_score": 0.0
+            }
+
 
 # Global service instance
 gemini_service = GeminiService()

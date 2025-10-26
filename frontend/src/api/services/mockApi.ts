@@ -9,8 +9,10 @@ import type {
   DocumentUploadResponse,
   Expense,
   Grant,
+  GrantProposal,
   GrantWithExpenses,
   Payment,
+  ProposalAnalysisResponse,
   User,
 } from '../../types';
 
@@ -179,6 +181,11 @@ export class MockApiService {
   async getPendingExpenses(): Promise<Expense[]> {
     await this.simulateDelay();
     return mockExpenses.filter((e) => e.status === 'pending');
+  }
+
+  async getExpenses(): Promise<Expense[]> {
+    await this.simulateDelay();
+    return mockExpenses;
   }
 
   async approveExpense(expenseId: number, approverId: number): Promise<Approval> {
@@ -654,6 +661,64 @@ export class MockApiService {
 
   async getPendingProposals(): Promise<GrantProposal[]> {
     return this.getProposals('pending');
+  }
+
+  // Budget Optimization Mock API methods
+  async getBudgetOptimization(): Promise<any[]> {
+    await this.simulateDelay();
+    
+    return [
+      {
+        grant_id: 1,
+        grant_name: "STEM Education Initiative",
+        current_spent: 25000,
+        total_budget: 50000,
+        remaining: 25000,
+        suggestions: [
+          {
+            type: "increase",
+            amount: 5000,
+            reason: "Technology purchases are trending 30% higher than projected",
+            impact: "Could fund 2 additional robotics workshops"
+          },
+          {
+            type: "reallocate",
+            amount: 2000,
+            reason: "Move funds from marketing to direct program delivery",
+            impact: "Increases student impact by 15%"
+          }
+        ],
+        risk_level: "medium",
+        confidence_score: 0.85
+      },
+      {
+        grant_id: 2,
+        grant_name: "Community Arts Program",
+        current_spent: 15000,
+        total_budget: 30000,
+        remaining: 15000,
+        suggestions: [
+          {
+            type: "decrease",
+            amount: 3000,
+            reason: "Venue costs are 20% lower than budgeted",
+            impact: "Frees up funds for additional programming"
+          }
+        ],
+        risk_level: "low",
+        confidence_score: 0.92
+      }
+    ];
+  }
+
+  async applyBudgetOptimization(grantId: number, optimization: any): Promise<any> {
+    await this.simulateDelay();
+    return {
+      message: "Budget optimization applied successfully",
+      grant_id: grantId,
+      optimization_applied: optimization,
+      new_budget_allocation: "Updated"
+    };
   }
 }
 

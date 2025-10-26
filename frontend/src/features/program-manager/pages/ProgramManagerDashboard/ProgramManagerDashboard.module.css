@@ -1,0 +1,393 @@
+.container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  gap: 24px;
+}
+
+.welcomeSection {
+  flex: 1;
+}
+
+.welcomeSection h1 {
+  color: #F0F0F0;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #6E44FF, #FFB800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcomeSection p {
+  color: #B0B0B0;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.quickStats {
+  display: flex;
+  gap: 16px;
+}
+
+.statCard {
+  background: linear-gradient(135deg, rgba(13, 13, 43, 0.9), rgba(110, 68, 255, 0.1));
+  border: 1px solid rgba(110, 68, 255, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  min-width: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6E44FF, #FFB800);
+}
+
+.statNumber {
+  color: #6E44FF;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  color: #B0B0B0;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  background: rgba(13, 13, 43, 0.5);
+  border: 1px solid rgba(110, 68, 255, 0.3);
+  color: #B0B0B0;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab:hover {
+  background: rgba(110, 68, 255, 0.1);
+  border-color: rgba(110, 68, 255, 0.5);
+  color: #F0F0F0;
+  transform: translateY(-2px);
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #6E44FF, #8B5CF6);
+  border-color: #6E44FF;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(110, 68, 255, 0.3);
+}
+
+.tabIcon {
+  font-size: 16px;
+}
+
+.content {
+  background: linear-gradient(135deg, rgba(13, 13, 43, 0.9), rgba(110, 68, 255, 0.05));
+  border: 1px solid rgba(110, 68, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  min-height: 500px;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #B0B0B0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(110, 68, 255, 0.3);
+  border-top: 3px solid #6E44FF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.overview {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.grantsSection, .recentSection {
+  background: rgba(13, 13, 43, 0.6);
+  border: 1px solid rgba(110, 68, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.grantsSection h3, .recentSection h3 {
+  color: #F0F0F0;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.grantsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.grantCard {
+  background: rgba(110, 68, 255, 0.05);
+  border: 1px solid rgba(110, 68, 255, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.grantCard:hover {
+  border-color: rgba(110, 68, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.grantHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.grantHeader h4 {
+  color: #F0F0F0;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.grantAmount {
+  color: #FFB800;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.grantProgress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 6px;
+  background: rgba(110, 68, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #6E44FF, #FFB800);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  color: #B0B0B0;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(110, 68, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.activityItem:hover {
+  background: rgba(110, 68, 255, 0.1);
+  transform: translateX(4px);
+}
+
+.activityIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.activityContent {
+  flex: 1;
+}
+
+.activityDescription {
+  color: #F0F0F0;
+  font-size: 14px;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.activityMeta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.activityAmount {
+  color: #FFB800;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.activityStatus {
+  color: #B0B0B0;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.insights {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.insights h3 {
+  color: #F0F0F0;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #6E44FF, #FFB800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.insightsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.insightCard {
+  background: rgba(13, 13, 43, 0.6);
+  border: 1px solid rgba(110, 68, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.insightCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6E44FF, #FFB800);
+}
+
+.insightCard:hover {
+  border-color: rgba(110, 68, 255, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(110, 68, 255, 0.1);
+}
+
+.insightIcon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.insightCard h4 {
+  color: #F0F0F0;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.insightCard p {
+  color: #B0B0B0;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .quickStats {
+    justify-content: center;
+  }
+  
+  .overviewGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tabs {
+    justify-content: center;
+  }
+  
+  .insightsGrid {
+    grid-template-columns: 1fr;
+  }
+}
