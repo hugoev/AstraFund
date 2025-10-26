@@ -27,6 +27,27 @@
   align-items: center;
   gap: 1rem;
   cursor: pointer;
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+}
+
+.logo:hover,
+.logo:focus,
+.logo:active,
+.logo:visited {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-style: none !important;
+}
+
+/* Remove underlines from all child elements */
+.logo *,
+.logo *:hover,
+.logo *:focus,
+.logo *:active {
+  text-decoration: none !important;
+  border-bottom: none !important;
 }
 
 .logoIcon {
@@ -72,6 +93,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  text-decoration: none !important;
+  border: none !important;
+}
+
+.logoText * {
+  text-decoration: none !important;
+  border-bottom: none !important;
 }
 
 .title {
@@ -85,6 +113,11 @@
   background-clip: text;
   letter-spacing: 1px;
   text-transform: uppercase;
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 .subtitle {
@@ -95,6 +128,11 @@
   text-transform: uppercase;
   margin: 0;
   font-family: var(--font-display);
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 .nav {
