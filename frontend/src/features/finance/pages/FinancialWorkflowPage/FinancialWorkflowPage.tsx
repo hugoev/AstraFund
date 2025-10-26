@@ -48,8 +48,7 @@ const FinancialWorkflowPage: React.FC = () => {
         await apiService.createPayment({
           expense_id: expenseId,
           amount: expense.amount,
-          payment_method: 'bank_transfer',
-          status: 'pending'
+          payment_method: 'bank_transfer'
         });
         
         // Process payment immediately

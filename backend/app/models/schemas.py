@@ -55,6 +55,10 @@ class ApprovalCreate(ApprovalBase):
     pass
 
 
+class ApprovalAction(BaseModel):
+    approver_id: int
+
+
 class PaymentCreate(PaymentBase):
     pass
 

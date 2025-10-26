@@ -29,8 +29,10 @@ def create_payment(payment: PaymentCreate, db: Session = Depends(get_db)):
     # Generate payment reference
     payment_reference = f"PAY-{uuid.uuid4().hex[:8].upper()}"
     
+    # Create payment (exclude payment_reference from dict to set it explicitly)
+    payment_data = payment.dict(exclude={'payment_reference'})
     db_payment = PaymentModel(
-        **payment.dict(),
+        **payment_data,
         payment_reference=payment_reference,
         status="pending"
     )

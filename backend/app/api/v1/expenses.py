@@ -6,7 +6,7 @@ from typing import List
 from app.core.database import get_db
 from app.models.database import Expense as ExpenseModel
 from app.models.database import Grant as GrantModel
-from app.models.schemas import Expense
+from app.models.schemas import ApprovalAction, Expense
 from app.services.gemini_service import gemini_service
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -61,7 +61,7 @@ def get_pending_expenses(db: Session = Depends(get_db)):
 
 
 @router.post("/{expense_id}/approve")
-def approve_expense(expense_id: int, approver_id: int, db: Session = Depends(get_db)):
+def approve_expense(expense_id: int, action: ApprovalAction, db: Session = Depends(get_db)):
     """Approve an expense"""
     expense = db.query(ExpenseModel).filter(ExpenseModel.id == expense_id).first()
     if not expense:
@@ -69,11 +69,11 @@ def approve_expense(expense_id: int, approver_id: int, db: Session = Depends(get
     
     expense.status = "approved"
     db.commit()
-    return {"message": "Expense approved successfully"}
+    return {"message": "Expense approved successfully", "expense_id": expense_id, "status": "approved"}
 
 
 @router.post("/{expense_id}/reject")
-def reject_expense(expense_id: int, approver_id: int, db: Session = Depends(get_db)):
+def reject_expense(expense_id: int, action: ApprovalAction, db: Session = Depends(get_db)):
     """Reject an expense"""
     expense = db.query(ExpenseModel).filter(ExpenseModel.id == expense_id).first()
     if not expense:
@@ -81,7 +81,7 @@ def reject_expense(expense_id: int, approver_id: int, db: Session = Depends(get_
     
     expense.status = "rejected"
     db.commit()
-    return {"message": "Expense rejected successfully"}
+    return {"message": "Expense rejected successfully", "expense_id": expense_id, "status": "rejected"}
 
 
 @router.post("/auto-approve-compliant")

@@ -37,7 +37,6 @@ const ROLE_PERMISSIONS = {
         'view_expenses',
         'create_expenses',
         'view_payments',
-        'create_payments',
         'view_documents',
         'view_proposals'
       ],

@@ -13,7 +13,7 @@ const GrantDetail: React.FC = () => {
   const navigate = useNavigate();
   const grantId = parseInt(id || '0');
   const { grant, loading, error, refetch } = useGrant(grantId);
-  const { user } = useAuth();
+  const { user, hasPermission } = useAuth();
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState<{ id: number; amount: number } | null>(null);
   const [expenseFilter, setExpenseFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
@@ -290,7 +290,7 @@ const GrantDetail: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  {expense.status === 'approved' && (
+                  {expense.status === 'approved' && hasPermission('process_payments') && (
                     <div className={styles.paymentActions}>
                       <button
                         onClick={() => handlePaymentClick({ id: expense.id, amount: expense.amount })}
