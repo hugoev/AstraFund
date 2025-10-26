@@ -23,6 +23,7 @@ export interface Expense {
   grant_id: number;
   submitter_id: number;
   status: string;
+  created_at: string;
   ai_compliance_check?: {
     is_compliant: boolean;
     justification: string;

@@ -3,7 +3,6 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import styles from './App.module.css';
 import { Header } from './components/layout';
 import { AnalyticsPage } from './features/analytics';
-import { DocumentsPage } from './features/documents';
 import { ApprovalsPage, PaymentsPage } from './features/expenses';
 import { Dashboard, GrantDetail } from './features/grants';
 import { ProgramManagerDashboard } from './features/program-manager';
@@ -52,11 +51,6 @@ function App() {
                   <AnalyticsPage />
                 </ProtectedRoute>
               } />
-            <Route path="/documents" element={
-              <ProtectedRoute permission="view_documents">
-                <DocumentsPage />
-              </ProtectedRoute>
-            } />
             <Route path="/proposals" element={
               <ProtectedRoute permission="view_proposals">
                 <ProposalsPage />

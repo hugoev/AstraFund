@@ -6,14 +6,12 @@ import styles from './ExpenseForm.module.css';
 interface ExpenseFormProps {
   grant: Grant;
   onSubmit: (expense: { description: string; amount: number; submitter_id: number }) => void;
-  onComplianceCheck: (expense: { description: string; amount: number }) => Promise<{ is_compliant: boolean; justification: string }>;
   currentUserId: number;
 }
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({ 
   grant, 
   onSubmit, 
-  onComplianceCheck, 
   currentUserId 
 }) => {
   const [description, setDescription] = useState('');
@@ -21,30 +19,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [complianceResult, setComplianceResult] = useState<{ is_compliant: boolean; justification: string } | null>(null);
 
-  const handleComplianceCheck = async () => {
+  const handleSubmit = () => {
     if (!description.trim() || !amount.trim()) {
       alert('Please fill in both description and amount');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const result = await onComplianceCheck({
-        description: description.trim(),
-        amount: parseFloat(amount)
-      });
-      setComplianceResult(result);
-    } catch (error) {
-      console.error('Compliance check failed:', error);
-      alert('Compliance check failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = () => {
-    if (!complianceResult) {
-      alert('Please run compliance check first');
       return;
     }
 

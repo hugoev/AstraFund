@@ -77,14 +77,6 @@ const Header: React.FC = () => {
           </Link>
           )}
           
-        {hasPermission('view_documents') && (
-          <Link
-            to="/documents"
-            className={`${styles.navLink} ${location.pathname === '/documents' ? styles.active : ''}`}
-          >
-            <span>Documents</span>
-          </Link>
-        )}
         {hasPermission('view_proposals') && (
           <Link
             to="/proposals"
@@ -98,7 +90,7 @@ const Header: React.FC = () => {
             to="/program-manager"
             className={`${styles.navLink} ${location.pathname === '/program-manager' ? styles.active : ''}`}
           >
-            <span>🤖 AI Manager</span>
+            <span>AI Manager</span>
           </Link>
         )}
           
