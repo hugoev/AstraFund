@@ -135,7 +135,7 @@ const ProposalsPage: React.FC = () => {
 
       {analysis && (
         <div className={styles.analysisCard}>
-          <h3>🤖 AI Analysis Results</h3>
+          <h3>🤠 AI Analysis Results</h3>
           <div className={styles.analysisContent}>
             <div className={styles.scoreSection}>
               <span className={styles.scoreLabel}>Compliance Score:</span>

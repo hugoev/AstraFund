@@ -102,7 +102,6 @@
 
 .approveButton,
 .rejectButton {
-  border: none;
   padding: var(--spacing-sm) var(--spacing-lg);
   border-radius: var(--radius-md);
   font-weight: 600;
@@ -112,14 +111,18 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 0.9rem;
+  backdrop-filter: blur(10px);
 }
 
 .approveButton {
-  background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
-  color: white;
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  border: 2px solid #8B5CF6;
 }
 
 .approveButton:hover:not(:disabled) {
+  background: rgba(139, 92, 246, 0.25);
+  border-color: #a78bfa;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
 }
@@ -128,19 +131,19 @@
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
-  background: rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.4);
 }
 
 .rejectButton {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  border: 2px solid #ef4444;
 }
 
 .rejectButton:hover {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: white;
-  border-color: transparent;
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #f87171;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
 }

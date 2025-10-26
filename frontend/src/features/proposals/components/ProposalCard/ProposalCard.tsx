@@ -95,7 +95,7 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
                 className={styles.analyzeButton}
                 onClick={() => onAnalyze(proposal.id)}
               >
-                🤖 Analyze with AI
+                🤠 Analyze with AI
               </button>
             )}
             
@@ -105,13 +105,19 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
                   className={styles.approveButton}
                   onClick={() => onReview(proposal.id, 'approved')}
                 >
-                  ✅ Approve
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.5 4L6 11.5L2.5 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Approve
                 </button>
                 <button
                   className={styles.rejectButton}
                   onClick={() => onReview(proposal.id, 'rejected')}
                 >
-                  ❌ Reject
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Reject
                 </button>
               </div>
             )}
