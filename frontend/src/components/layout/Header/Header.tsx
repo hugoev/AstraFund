@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Header.module.css';
+import { useAuth } from '/src/contexts/AuthContext';
 
 const Header: React.FC = () => {
   const location = useLocation();
+  const { user, logout, hasPermission } = useAuth();
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   return (
     <header className={styles.header}>
@@ -37,33 +40,73 @@ const Header: React.FC = () => {
           >
             <span>Dashboard</span>
           </Link>
-          <Link 
-            to="/approvals" 
-            className={`${styles.navLink} ${location.pathname === '/approvals' ? styles.active : ''}`}
-          >
-            <span>Approvals</span>
-          </Link>
-          <Link 
-            to="/payments" 
-            className={`${styles.navLink} ${location.pathname === '/payments' ? styles.active : ''}`}
-          >
-            <span>Payments</span>
-          </Link>
-          <Link 
-            to="/users" 
-            className={`${styles.navLink} ${location.pathname === '/users' ? styles.active : ''}`}
-          >
-            <span>Users</span>
-          </Link>
-          <Link 
-            to="/analytics" 
-            className={`${styles.navLink} ${location.pathname === '/analytics' ? styles.active : ''}`}
-          >
-            <span>Analytics</span>
-          </Link>
-          <button className={styles.userButton}>
-            <span className={styles.userInitial}>A</span>
-          </button>
+          
+          {hasPermission('approve_expenses') && (
+            <Link 
+              to="/approvals" 
+              className={`${styles.navLink} ${location.pathname === '/approvals' ? styles.active : ''}`}
+            >
+              <span>Approvals</span>
+            </Link>
+          )}
+          
+          {hasPermission('process_payments') && (
+            <Link 
+              to="/payments" 
+              className={`${styles.navLink} ${location.pathname === '/payments' ? styles.active : ''}`}
+            >
+              <span>Payments</span>
+            </Link>
+          )}
+          
+          {hasPermission('view_users') && (
+            <Link 
+              to="/users" 
+              className={`${styles.navLink} ${location.pathname === '/users' ? styles.active : ''}`}
+            >
+              <span>Users</span>
+            </Link>
+          )}
+          
+          {hasPermission('view_analytics') && (
+            <Link 
+              to="/analytics" 
+              className={`${styles.navLink} ${location.pathname === '/analytics' ? styles.active : ''}`}
+            >
+              <span>Analytics</span>
+            </Link>
+          )}
+          
+          {user && (
+            <div className={styles.userSection}>
+              <button 
+                className={styles.userButton}
+                onClick={() => setShowUserMenu(!showUserMenu)}
+              >
+                <span className={styles.userInitial}>
+                  {user.username.charAt(0).toUpperCase()}
+                </span>
+              </button>
+              
+              {showUserMenu && (
+                <div className={styles.userMenu}>
+                  <div className={styles.userInfo}>
+                    <div className={styles.userName}>{user.username}</div>
+                    <div className={styles.userRole}>{user.role}</div>
+                  </div>
+                  <button 
+                    className={styles.logoutButton}
+                    onClick={() => {
+                      logout();
+                      setShowUserMenu(false);
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </nav>
       </div>
     </header>

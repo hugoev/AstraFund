@@ -6,25 +6,52 @@ import { AnalyticsPage } from './features/analytics';
 import { ApprovalsPage, PaymentsPage } from './features/expenses';
 import { Dashboard, GrantDetail } from './features/grants';
 import { UsersPage } from './features/users';
+import { ProtectedRoute } from '/src/components/auth';
 import { GalaxyBackground } from '/src/components/common';
+import { AuthProvider } from '/src/contexts/AuthContext';
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className={styles.app}>
-        <GalaxyBackground />
-        <Header />
-        <main className={styles.main}>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/grant/:id" element={<GrantDetail />} />
-            <Route path="/approvals" element={<ApprovalsPage />} />
-            <Route path="/payments" element={<PaymentsPage />} />
-            <Route path="/users" element={<UsersPage />} />
-            <Route path="/analytics" element={<AnalyticsPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
+    <AuthProvider>
+      <BrowserRouter>
+        <div className={styles.app}>
+          <GalaxyBackground />
+          <Header />
+          <main className={styles.main}>
+            <Routes>
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/grant/:id" element={
+                <ProtectedRoute>
+                  <GrantDetail />
+                </ProtectedRoute>
+              } />
+              <Route path="/approvals" element={
+                <ProtectedRoute permission="approve_expenses">
+                  <ApprovalsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/payments" element={
+                <ProtectedRoute permission="process_payments">
+                  <PaymentsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/users" element={
+                <ProtectedRoute permission="view_users">
+                  <UsersPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/analytics" element={
+                <ProtectedRoute permission="view_analytics">
+                  <AnalyticsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
         <Toaster
           position="top-right"
           toastOptions={{
@@ -51,8 +78,9 @@ function App() {
             },
           }}
         />
-      </div>
-    </BrowserRouter>
+        </div>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

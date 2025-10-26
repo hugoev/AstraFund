@@ -5,10 +5,12 @@ import { GrantCard, GrantForm } from '../../components';
 import { useGrantManagement, useGrants } from '../../hooks';
 import styles from './Dashboard.module.css';
 import { ErrorMessage, LoadingSpinner } from '/src/components/common';
+import { useAuth } from '/src/contexts/AuthContext';
 
 const Dashboard: React.FC = () => {
   const { grants, loading, error, refetch } = useGrants();
   const { createGrant } = useGrantManagement();
+  const { hasPermission } = useAuth();
   const navigate = useNavigate();
   const [showGrantForm, setShowGrantForm] = useState(false);
 
@@ -44,13 +46,15 @@ const Dashboard: React.FC = () => {
             Manage your grants and track compliance
           </p>
         </div>
-        <button
-          onClick={() => setShowGrantForm(true)}
-          className={styles.createButton}
-        >
-          <span className={styles.buttonIcon}>+</span>
-          Create Grant
-        </button>
+        {hasPermission('create_grants') && (
+          <button
+            onClick={() => setShowGrantForm(true)}
+            className={styles.createButton}
+          >
+            <span className={styles.buttonIcon}>+</span>
+            Create Grant
+          </button>
+        )}
       </div>
 
       {grants.length === 0 ? (
