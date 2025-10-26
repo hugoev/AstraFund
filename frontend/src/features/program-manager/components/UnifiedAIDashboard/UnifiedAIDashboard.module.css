@@ -1,0 +1,240 @@
+.dashboard {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #0D0D2B 0%, #1a1a3a 100%);
+  min-height: 100vh;
+  color: #F0F0F0;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: rgba(110, 68, 255, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(110, 68, 255, 0.3);
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(45deg, #6E44FF, #FFB800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header p {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(110, 68, 255, 0.3);
+  border-top: 4px solid #6E44FF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.notifications {
+  margin-bottom: 3rem;
+}
+
+.notifications h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #FFB800;
+}
+
+.notification {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid;
+  transition: all 0.3s ease;
+}
+
+.notification:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.notification.high {
+  border-left-color: #ff4757;
+  background: rgba(255, 71, 87, 0.1);
+}
+
+.notification.medium {
+  border-left-color: #ffa502;
+  background: rgba(255, 165, 2, 0.1);
+}
+
+.notification.low {
+  border-left-color: #2ed573;
+  background: rgba(46, 213, 115, 0.1);
+}
+
+.notificationContent h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.notificationContent p {
+  margin: 0 0 1rem 0;
+  opacity: 0.9;
+}
+
+.actionButton {
+  background: linear-gradient(45deg, #6E44FF, #8B5CF6);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.actionButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(110, 68, 255, 0.4);
+}
+
+.quickActions {
+  margin-bottom: 3rem;
+}
+
+.quickActions h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #FFB800;
+}
+
+.actionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.actionCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(110, 68, 255, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #F0F0F0;
+  text-decoration: none;
+}
+
+.actionCard:hover:not(.disabled) {
+  transform: translateY(-5px);
+  background: rgba(110, 68, 255, 0.1);
+  border-color: #6E44FF;
+  box-shadow: 0 10px 30px rgba(110, 68, 255, 0.2);
+}
+
+.actionCard.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.actionIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.actionCard h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: #FFB800;
+}
+
+.actionCard p {
+  margin: 0;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.aiProcessing {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid #6E44FF;
+  text-align: center;
+  z-index: 1000;
+}
+
+.aiProcessing .spinner {
+  margin-bottom: 1rem;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(110, 68, 255, 0.2);
+}
+
+.statCard h3 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  color: #6E44FF;
+}
+
+.statCard p {
+  margin: 0;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .actionsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,19 +1,19 @@
 import { config } from '../config';
 import type {
-  Approval,
-  ComplianceCheckRequest,
-  ComplianceCheckResponse,
-  ComplianceDocumentResponse,
-  Document,
-  DocumentAnalysisResponse,
-  DocumentUploadResponse,
-  Expense,
-  Grant,
-  GrantProposal,
-  GrantWithExpenses,
-  Payment,
-  ProposalAnalysisResponse,
-  User,
+    Approval,
+    ComplianceCheckRequest,
+    ComplianceCheckResponse,
+    ComplianceDocumentResponse,
+    Document,
+    DocumentAnalysisResponse,
+    DocumentUploadResponse,
+    Expense,
+    Grant,
+    GrantProposal,
+    GrantWithExpenses,
+    Payment,
+    ProposalAnalysisResponse,
+    User,
 } from '../types';
 import { mockApiService } from './services/mockApi';
 
@@ -104,6 +104,12 @@ class RealApiService {
     return this.request<Approval>(`/expenses/${expenseId}/reject`, {
       method: 'POST',
       body: JSON.stringify({ approver_id: approverId }),
+    });
+  }
+
+  async autoApproveCompliant(): Promise<any> {
+    return this.request('/expenses/auto-approve-compliant', {
+      method: 'POST',
     });
   }
 

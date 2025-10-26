@@ -100,6 +100,29 @@ def reject_expense(expense_id: int, approver_id: int, db: Session = Depends(get_
     return {"message": "Expense rejected successfully"}
 
 
+@router.post("/auto-approve-compliant")
+def auto_approve_compliant(db: Session = Depends(get_db)):
+    """Auto-approve all compliant expenses"""
+    # Get all pending expenses that are AI-compliant
+    compliant_expenses = db.query(ExpenseModel).filter(
+        ExpenseModel.status == "pending",
+        ExpenseModel.ai_compliance_check["is_compliant"] == True
+    ).all()
+    
+    approved_count = 0
+    for expense in compliant_expenses:
+        # Update expense status
+        expense.status = "approved"
+        approved_count += 1
+    
+    db.commit()
+    
+    return {
+        "message": f"Auto-approved {approved_count} compliant expenses",
+        "approved_count": approved_count
+    }
+
+
 @router.post("/copilot/suggest-allocation")
 async def suggest_expense_allocation(
     expense_description: str,
