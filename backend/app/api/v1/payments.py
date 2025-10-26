@@ -52,8 +52,14 @@ def create_payment(payment: PaymentCreate, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=List[Payment])
 def get_payments(db: Session = Depends(get_db)):
-    """Get all payments"""
-    payments = db.query(PaymentModel).all()
+    """Get all payments ordered by status (pending first) and creation date (newest first)"""
+    payments = db.query(PaymentModel).order_by(
+        # Pending payments first, then by status
+        PaymentModel.status == "pending",
+        PaymentModel.status,
+        # Within each status group, newest first
+        PaymentModel.created_at.desc()
+    ).all()
     return [
         {
             "id": payment.id,
@@ -71,8 +77,14 @@ def get_payments(db: Session = Depends(get_db)):
 
 @router.get("/expense/{expense_id}", response_model=List[Payment])
 def get_expense_payments(expense_id: int, db: Session = Depends(get_db)):
-    """Get all payments for a specific expense"""
-    payments = db.query(PaymentModel).filter(PaymentModel.expense_id == expense_id).all()
+    """Get all payments for a specific expense ordered by status and creation date"""
+    payments = db.query(PaymentModel).filter(PaymentModel.expense_id == expense_id).order_by(
+        # Pending payments first, then by status
+        PaymentModel.status == "pending",
+        PaymentModel.status,
+        # Within each status group, newest first
+        PaymentModel.created_at.desc()
+    ).all()
     return [
         {
             "id": payment.id,

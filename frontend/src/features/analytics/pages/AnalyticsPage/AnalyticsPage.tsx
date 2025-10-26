@@ -1,18 +1,24 @@
-import React from 'react';
-import { MetricCard } from '../../components';
+import React, { useState } from 'react';
+import { Chart, MetricCard, ProgressBar, TimePeriodSelector } from '../../components';
 import { useAnalytics } from '../../hooks';
 import styles from './AnalyticsPage.module.css';
 import { ErrorMessage, LoadingSpinner } from '/src/components/common';
 
 const AnalyticsPage: React.FC = () => {
-  const { analytics, loading, error, refetch } = useAnalytics();
+  const [selectedPeriod, setSelectedPeriod] = useState('30');
+  const { analytics, trends, loading, error, refetch } = useAnalytics();
+
+  const handlePeriodChange = (period: string) => {
+    setSelectedPeriod(period);
+    refetch(parseInt(period));
+  };
 
   if (loading) {
     return <LoadingSpinner message="Loading analytics..." />;
   }
 
   if (error) {
-    return <ErrorMessage message={error} onRetry={refetch} />;
+    return <ErrorMessage message={error} onRetry={() => refetch(parseInt(selectedPeriod))} />;
   }
 
   if (!analytics) {
@@ -28,88 +34,176 @@ const AnalyticsPage: React.FC = () => {
     }).format(amount);
   };
 
+  const formatCurrencyCompact = (amount: number) => {
+    if (amount >= 1000000) {
+      return `$${(amount / 1000000).toFixed(1)}M`;
+    } else if (amount >= 1000) {
+      return `$${(amount / 1000).toFixed(1)}K`;
+    }
+    return formatCurrency(amount);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Analytics Dashboard</h1>
-        <p className={styles.subtitle}>
-          Comprehensive overview of your grant management system
-        </p>
-      </div>
-
-      <div className={styles.metricsGrid}>
-        <MetricCard
-          title="Total Grants"
-          value={analytics.totalGrants}
-          icon="📊"
-          color="primary"
-        />
-        <MetricCard
-          title="Total Users"
-          value={analytics.totalUsers}
-          icon="👥"
-          color="info"
-        />
-        <MetricCard
-          title="Total Expenses"
-          value={analytics.totalExpenses}
-          icon="💰"
-          color="success"
-        />
-        <MetricCard
-          title="Total Payments"
-          value={analytics.totalPayments}
-          icon="💳"
-          color="warning"
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Analytics Dashboard</h1>
+          <p className={styles.subtitle}>
+            Comprehensive overview of your grant management system
+          </p>
+        </div>
+        <TimePeriodSelector
+          selectedPeriod={selectedPeriod}
+          onPeriodChange={handlePeriodChange}
         />
       </div>
 
-      <div className={styles.metricsGrid}>
-        <MetricCard
-          title="Total Spent"
-          value={formatCurrency(analytics.totalSpent)}
-          icon="💸"
-          color="danger"
-        />
-        <MetricCard
-          title="Pending Expenses"
-          value={analytics.pendingExpenses}
-          icon="⏳"
-          color="warning"
-        />
-        <MetricCard
-          title="Pending Payments"
-          value={analytics.pendingPayments}
-          icon="🔄"
-          color="info"
-        />
-        <MetricCard
-          title="Approved Expenses"
-          value={analytics.approvedExpenses}
-          icon="✅"
-          color="success"
-        />
+      {/* Key Metrics Grid */}
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Key Metrics</h2>
+        <div className={styles.metricsGrid}>
+          <MetricCard
+            title="Total Grants"
+            value={analytics.overview.total_grants}
+            icon="📊"
+            color="primary"
+          />
+          <MetricCard
+            title="Total Users"
+            value={analytics.overview.total_users}
+            icon="👥"
+            color="info"
+          />
+          <MetricCard
+            title="Total Expenses"
+            value={analytics.overview.total_expenses}
+            icon="💰"
+            color="success"
+          />
+          <MetricCard
+            title="Total Payments"
+            value={analytics.overview.total_payments}
+            icon="💳"
+            color="warning"
+          />
+        </div>
       </div>
 
-      <div className={styles.metricsGrid}>
-        <MetricCard
-          title="Rejected Expenses"
-          value={analytics.rejectedExpenses}
-          icon="❌"
-          color="danger"
-        />
-        <MetricCard
-          title="Completed Payments"
-          value={analytics.completedPayments}
-          icon="🎉"
-          color="success"
-        />
-        <MetricCard
-          title="Failed Payments"
-          value={analytics.failedPayments}
-          icon="⚠️"
-          color="danger"
-        />
+      {/* Financial Overview */}
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Financial Overview</h2>
+        <div className={styles.financialGrid}>
+          <div className={styles.financialCard}>
+            <h3 className={styles.cardTitle}>Budget Utilization</h3>
+            <ProgressBar
+              label="Total Budget"
+              current={analytics.overview.total_spent}
+              total={analytics.overview.total_grant_amount}
+              color="primary"
+              formatValue={formatCurrencyCompact}
+            />
+          </div>
+          
+          <div className={styles.financialCard}>
+            <h3 className={styles.cardTitle}>Recent Activity</h3>
+            <div className={styles.activityMetrics}>
+              <div className={styles.activityItem}>
+                <span className={styles.activityLabel}>Recent Expenses:</span>
+                <span className={styles.activityValue}>{analytics.overview.recent_expenses}</span>
+              </div>
+              <div className={styles.activityItem}>
+                <span className={styles.activityLabel}>Recent Payments:</span>
+                <span className={styles.activityValue}>{analytics.overview.recent_payments}</span>
+              </div>
+              <div className={styles.activityItem}>
+                <span className={styles.activityLabel}>Compliance Rate:</span>
+                <span className={styles.activityValue}>{analytics.overview.compliance_rate}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Trends Charts */}
+      {trends && (
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Trends & Patterns</h2>
+          <div className={styles.chartsGrid}>
+            <Chart
+              title="Expense Trends"
+              data={trends.expense_trends}
+              type="bar"
+              showAmount={true}
+            />
+            <Chart
+              title="Payment Trends"
+              data={trends.payment_trends}
+              type="bar"
+              showAmount={true}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Status Breakdowns */}
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Status Breakdowns</h2>
+        <div className={styles.breakdownGrid}>
+          <div className={styles.breakdownCard}>
+            <h3 className={styles.cardTitle}>Expense Status</h3>
+            <div className={styles.statusList}>
+              {Object.entries(analytics.expense_breakdown).map(([status, count]) => (
+                <div key={status} className={styles.statusItem}>
+                  <span className={styles.statusLabel}>{status}:</span>
+                  <span className={styles.statusValue}>{count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className={styles.breakdownCard}>
+            <h3 className={styles.cardTitle}>Payment Status</h3>
+            <div className={styles.statusList}>
+              {Object.entries(analytics.payment_breakdown).map(([status, count]) => (
+                <div key={status} className={styles.statusItem}>
+                  <span className={styles.statusLabel}>{status}:</span>
+                  <span className={styles.statusValue}>{count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Additional Metrics */}
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Performance Metrics</h2>
+        <div className={styles.metricsGrid}>
+          <MetricCard
+            title="Average Expense"
+            value={formatCurrency(analytics.overview.avg_expense_amount)}
+            icon="📈"
+            color="info"
+          />
+          <MetricCard
+            title="Average Payment"
+            value={formatCurrency(analytics.overview.avg_payment_amount)}
+            icon="💸"
+            color="success"
+          />
+          <MetricCard
+            title="Remaining Budget"
+            value={formatCurrency(analytics.overview.remaining_budget)}
+            icon="💰"
+            color="warning"
+          />
+          <MetricCard
+            title="Compliance Rate"
+            value={`${analytics.overview.compliance_rate}%`}
+            icon="✅"
+            color="primary"
+          />
+        </div>
       </div>
     </div>
   );

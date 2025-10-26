@@ -5,17 +5,24 @@
 }
 
 .header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 3rem;
+  gap: 2rem;
+}
+
+.headerContent {
+  flex: 1;
 }
 
 .title {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--color-text);
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 1rem 0;
   font-family: 'Space Mono', monospace;
-  background: linear-gradient(135deg, var(--color-text), var(--color-secondary));
+  background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -28,24 +35,158 @@
   font-family: 'Space Mono', monospace;
 }
 
+.section {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 1.5rem 0;
+  font-family: 'Space Mono', monospace;
+  border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+  padding-bottom: 0.5rem;
+}
+
 .metricsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
+}
+
+.financialGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
   margin-bottom: 2rem;
+}
+
+.financialCard {
+  background: rgba(15, 10, 30, 0.8);
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0,
+    100% 8px, 100% calc(100% - 8px),
+    calc(100% - 8px) 100%, 8px 100%,
+    0 calc(100% - 8px), 0 8px
+  );
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 1rem 0;
+  font-family: 'Space Mono', monospace;
+}
+
+.activityMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.activityItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.activityLabel {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Space Mono', monospace;
+}
+
+.activityValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  font-family: 'Space Mono', monospace;
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.breakdownGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.breakdownCard {
+  background: rgba(15, 10, 30, 0.8);
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0,
+    100% 8px, 100% calc(100% - 8px),
+    calc(100% - 8px) 100%, 8px 100%,
+    0 calc(100% - 8px), 0 8px
+  );
+}
+
+.statusList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.statusItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.statusLabel {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Space Mono', monospace;
+  text-transform: capitalize;
+}
+
+.statusValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  font-family: 'Space Mono', monospace;
 }
 
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
   }
-
+  
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
   .title {
     font-size: 2rem;
   }
-
+  
   .metricsGrid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+  }
+  
+  .financialGrid,
+  .chartsGrid,
+  .breakdownGrid {
+    grid-template-columns: 1fr;
   }
 }

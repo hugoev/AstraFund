@@ -146,6 +146,27 @@ class RealApiService {
   async getExpenseApprovals(expenseId: number): Promise<Approval[]> {
     return this.request<Approval[]>(`/approvals/expense/${expenseId}`);
   }
+
+  // Analytics methods
+  async getAnalyticsOverview(): Promise<any> {
+    const response = await this.request<any>('/analytics/overview');
+    return response;
+  }
+
+  async getAnalyticsTrends(days: number = 30): Promise<any> {
+    const response = await this.request<any>(`/analytics/trends?days=${days}`);
+    return response;
+  }
+
+  async getGrantAnalytics(grantId: number): Promise<any> {
+    const response = await this.request<any>(`/analytics/grants/${grantId}/analytics`);
+    return response;
+  }
+
+  async getUserAnalytics(userId: number): Promise<any> {
+    const response = await this.request<any>(`/analytics/users/${userId}/analytics`);
+    return response;
+  }
 }
 
 // Export the appropriate service based on configuration

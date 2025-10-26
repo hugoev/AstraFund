@@ -2,56 +2,60 @@ import { useCallback, useEffect, useState } from 'react';
 import { apiService } from '../../../api';
 
 interface AnalyticsData {
-  totalGrants: number;
-  totalExpenses: number;
-  totalPayments: number;
-  totalUsers: number;
-  totalSpent: number;
-  pendingExpenses: number;
-  pendingPayments: number;
-  approvedExpenses: number;
-  rejectedExpenses: number;
-  completedPayments: number;
-  failedPayments: number;
+  overview: {
+    total_grants: number;
+    total_users: number;
+    total_expenses: number;
+    total_payments: number;
+    total_grant_amount: number;
+    total_spent: number;
+    remaining_budget: number;
+    recent_expenses: number;
+    recent_payments: number;
+    avg_expense_amount: number;
+    avg_payment_amount: number;
+    compliance_rate: number;
+  };
+  expense_breakdown: Record<string, number>;
+  payment_breakdown: Record<string, number>;
+}
+
+interface TrendsData {
+  expense_trends: Array<{
+    date: string;
+    count: number;
+    total_amount: number;
+  }>;
+  payment_trends: Array<{
+    date: string;
+    count: number;
+    total_amount: number;
+  }>;
+  period: {
+    start_date: string;
+    end_date: string;
+    days: number;
+  };
 }
 
 export function useAnalytics() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+  const [trends, setTrends] = useState<TrendsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAnalytics = useCallback(async () => {
+  const fetchAnalytics = useCallback(async (days: number = 30) => {
     try {
       setLoading(true);
       setError(null);
 
-      const [grants, expenses, payments, users] = await Promise.all([
-        apiService.getGrants(),
-        apiService.getPendingExpenses(),
-        apiService.getPayments(),
-        apiService.getUsers()
+      const [overviewData, trendsData] = await Promise.all([
+        apiService.getAnalyticsOverview(),
+        apiService.getAnalyticsTrends(days)
       ]);
 
-      const allExpenses = expenses; // This would need to be expanded to get all expenses
-      const totalSpent = payments
-        .filter(p => p.status === 'completed')
-        .reduce((sum, p) => sum + p.amount, 0);
-
-      const analyticsData: AnalyticsData = {
-        totalGrants: grants.length,
-        totalExpenses: allExpenses.length,
-        totalPayments: payments.length,
-        totalUsers: users.length,
-        totalSpent,
-        pendingExpenses: allExpenses.filter(e => e.status === 'pending').length,
-        pendingPayments: payments.filter(p => p.status === 'pending').length,
-        approvedExpenses: allExpenses.filter(e => e.status === 'approved').length,
-        rejectedExpenses: allExpenses.filter(e => e.status === 'rejected').length,
-        completedPayments: payments.filter(p => p.status === 'completed').length,
-        failedPayments: payments.filter(p => p.status === 'failed').length,
-      };
-
-      setAnalytics(analyticsData);
+      setAnalytics(overviewData);
+      setTrends(trendsData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load analytics');
       console.error('Error fetching analytics:', err);
@@ -64,5 +68,11 @@ export function useAnalytics() {
     fetchAnalytics();
   }, [fetchAnalytics]);
 
-  return { analytics, loading, error, refetch: fetchAnalytics };
+  return { 
+    analytics, 
+    trends, 
+    loading, 
+    error, 
+    refetch: fetchAnalytics 
+  };
 }

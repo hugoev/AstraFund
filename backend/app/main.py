@@ -1,7 +1,7 @@
 """
 AstraFund API - Main application
 """
-from app.api.v1 import approvals, compliance, expenses, grants, payments, users
+from app.api.v1 import analytics, approvals, compliance, expenses, grants, payments, users
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.core.exceptions import setup_exception_handlers
@@ -44,6 +44,7 @@ app.include_router(compliance.router, prefix="/compliance", tags=["compliance"])
 app.include_router(users.router, prefix="/users", tags=["users"])
 app.include_router(approvals.router, prefix="/approvals", tags=["approvals"])
 app.include_router(payments.router, prefix="/payments", tags=["payments"])
+app.include_router(analytics.router, prefix="/analytics", tags=["analytics"])
 
 
 @app.get("/")
