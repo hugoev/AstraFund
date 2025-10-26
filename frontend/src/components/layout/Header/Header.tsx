@@ -50,15 +50,6 @@ const Header: React.FC = () => {
             </Link>
           )}
           
-          {hasPermission('view_users') && (
-          <Link 
-            to="/users" 
-            className={`${styles.navLink} ${location.pathname === '/users' ? styles.active : ''}`}
-          >
-            <span>Users</span>
-          </Link>
-          )}
-          
           {hasPermission('view_analytics') && (
           <Link 
             to="/analytics" 

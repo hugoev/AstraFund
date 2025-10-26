@@ -14,7 +14,7 @@ const ChatbotToggle: React.FC<ChatbotToggleProps> = ({ onClick, isOpen }) => {
       title={isOpen ? 'Close AI Assistant' : 'Open AI Assistant'}
     >
       <div className={styles.icon}>
-        {isOpen ? '✕' : '🤖'}
+        {isOpen ? '✕' : '🤠'}
       </div>
       <div className={styles.tooltip}>
         {isOpen ? 'Close AI Assistant' : 'Ask AI about your data'}
