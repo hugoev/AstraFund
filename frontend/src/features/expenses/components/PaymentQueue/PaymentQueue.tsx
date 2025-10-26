@@ -163,7 +163,6 @@ const PaymentQueue: React.FC<PaymentQueueProps> = ({ payments, onProcessPayment,
         message={`Are you sure you want to ${confirmDialog.type} payment ${confirmDialog.paymentReference}?`}
         confirmText={confirmDialog.type === 'process' ? 'Process' : 'Cancel'}
         cancelText="Cancel"
-        confirmButtonClass={confirmDialog.type === 'process' ? styles.confirmProcess : styles.confirmCancel}
       />
     </div>
   );

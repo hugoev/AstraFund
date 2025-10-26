@@ -5,7 +5,7 @@ import { usePayments } from '../../hooks';
 import styles from './PaymentsPage.module.css';
 
 const PaymentsPage: React.FC = () => {
-  const [currentUserId] = useState(1); // Mock user ID
+  const [_currentUserId] = useState(1); // Mock user ID
   const { payments, processPayment, cancelPayment, refetch } = usePayments();
 
   const handleProcessPayment = async (paymentId: number) => {

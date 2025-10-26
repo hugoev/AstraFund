@@ -3,6 +3,10 @@ import type {
   Approval,
   ComplianceCheckRequest,
   ComplianceCheckResponse,
+  ComplianceDocumentResponse,
+  Document,
+  DocumentAnalysisResponse,
+  DocumentUploadResponse,
   Expense,
   Grant,
   GrantWithExpenses,
@@ -13,6 +17,12 @@ import { mockApiService } from './services/mockApi';
 
 // Real API Service (for when backend is ready)
 class RealApiService {
+  public baseUrl: string;
+
+  constructor() {
+    this.baseUrl = config.API_BASE_URL;
+  }
+
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${config.API_BASE_URL}${endpoint}`;
     const response = await fetch(url, {
@@ -179,6 +189,56 @@ class RealApiService {
 
   async getAIInsights(): Promise<any> {
     const response = await this.request<any>('/chatbot/insights');
+    return response;
+  }
+
+  // Document Intelligence API methods
+  async uploadDocument(
+    file: File,
+    documentType: string,
+    grantId?: number
+  ): Promise<DocumentUploadResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('document_type', documentType);
+    if (grantId) {
+      formData.append('grant_id', grantId.toString());
+    }
+
+    const response = await fetch(`${this.baseUrl}/documents/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  async analyzeDocument(
+    documentId: string,
+    analysisType: string = 'compliance'
+  ): Promise<DocumentAnalysisResponse> {
+    const response = await this.request<DocumentAnalysisResponse>(`/documents/analyze/${documentId}?analysis_type=${analysisType}`);
+    return response;
+  }
+
+  async generateComplianceDocument(grantId: number): Promise<ComplianceDocumentResponse> {
+    const response = await this.request<ComplianceDocumentResponse>(`/documents/generate-compliance/${grantId}`, {
+      method: 'POST',
+    });
+    return response;
+  }
+
+  async getDocument(documentId: string): Promise<Document> {
+    const response = await this.request<Document>(`/documents/${documentId}`);
+    return response;
+  }
+
+  async getGrantDocuments(grantId: number): Promise<Document[]> {
+    const response = await this.request<Document[]>(`/documents/grant/${grantId}`);
     return response;
   }
 }

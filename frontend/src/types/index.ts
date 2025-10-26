@@ -2,6 +2,7 @@ export interface User {
   id: number;
   username: string;
   role: string;
+  created_at?: string;
 }
 
 export interface Grant {
@@ -44,6 +45,44 @@ export interface Payment {
   status: string;
   processed_at?: string;
   created_at: string;
+}
+
+export interface Document {
+  id: string;
+  filename: string;
+  document_type: 'receipt' | 'contract' | 'invoice' | 'general';
+  grant_id?: number;
+  extracted_data: Record<string, any>;
+  confidence_score: number;
+  processing_status: 'pending' | 'processing' | 'completed' | 'failed';
+  created_at: string;
+}
+
+export interface DocumentUploadResponse {
+  document_id: string;
+  filename: string;
+  document_type: string;
+  extracted_data: Record<string, any>;
+  confidence_score: number;
+  processing_status: string;
+}
+
+export interface DocumentAnalysisResponse {
+  document_id: string;
+  analysis_type: string;
+  key_terms: string[];
+  compliance_notes: string[];
+  risk_score: number;
+  recommendations: string[];
+}
+
+export interface ComplianceDocumentResponse {
+  document_id: string;
+  grant_id: number;
+  compliance_summary: string;
+  key_requirements: string[];
+  compliance_score: number;
+  generated_at: string;
 }
 
 export interface ComplianceCheckRequest {

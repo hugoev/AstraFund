@@ -5,7 +5,7 @@ from datetime import datetime
 
 from app.core.database import Base
 from sqlalchemy import (JSON, Column, DateTime, Float, ForeignKey, Integer,
-                        String)
+                        String, Text)
 from sqlalchemy.orm import relationship
 
 
@@ -35,6 +35,7 @@ class Grant(Base):
     
     # Relationships
     expenses = relationship("Expense", back_populates="grant")
+    documents = relationship("Document", back_populates="grant")
 
 
 class Expense(Base):
@@ -86,3 +87,20 @@ class Payment(Base):
     
     # Relationships
     expense = relationship("Expense", back_populates="payments")
+
+
+class Document(Base):
+    """Document model for AI document intelligence"""
+    __tablename__ = "documents"
+    
+    id = Column(String, primary_key=True, index=True)
+    filename = Column(String, nullable=False)
+    document_type = Column(String, nullable=False)  # receipt, contract, invoice, etc.
+    grant_id = Column(Integer, ForeignKey("grants.id"), nullable=True)
+    extracted_data = Column(Text, nullable=True)  # JSON string of extracted data
+    confidence_score = Column(Float, default=0.0)
+    processing_status = Column(String, default="pending")  # pending, processing, completed, failed
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    grant = relationship("Grant", back_populates="documents")

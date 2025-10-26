@@ -77,6 +77,15 @@ const Header: React.FC = () => {
             </Link>
           )}
           
+          {hasPermission('view_documents') && (
+            <Link 
+              to="/documents" 
+              className={`${styles.navLink} ${location.pathname === '/documents' ? styles.active : ''}`}
+            >
+              <span>Documents</span>
+            </Link>
+          )}
+          
           {user && (
             <div className={styles.userSection}>
               <button 

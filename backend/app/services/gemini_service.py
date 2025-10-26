@@ -3,7 +3,7 @@ Gemini AI service for compliance checking
 """
 import json
 import os
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 from app.core.config import settings
 from app.core.logging import get_logger
@@ -183,6 +183,120 @@ Proposed Expense: A purchase of '{expense_description}' for ${expense_amount}.""
                 "is_compliant": False,
                 "justification": "Demo mode: Please review this expense manually as it doesn't match common patterns."
             }
+
+
+    def extract_document_data(self, content_base64: str, prompt: str, document_type: str) -> Dict:
+        """Extract data from documents using AI"""
+        try:
+            system_prompt = f"""You are an expert document analysis AI. Analyze the provided document and extract structured data according to the given format. Be precise and accurate in your extraction."""
+            
+            user_prompt = f"""
+            Document Type: {document_type}
+            Analysis Instructions: {prompt}
+            
+            Please analyze the document and return the requested information in valid JSON format.
+            """
+            
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=user_prompt,
+                generation_config={
+                    "temperature": 0.1,
+                    "top_p": 0.8,
+                    "top_k": 40,
+                    "max_output_tokens": 2048,
+                }
+            )
+            
+            # Parse JSON response
+            try:
+                extracted_data = json.loads(response.text)
+                return extracted_data
+            except json.JSONDecodeError:
+                # Fallback if JSON parsing fails
+                return {
+                    "error": "Failed to parse AI response",
+                    "raw_response": response.text,
+                    "document_type": document_type
+                }
+                
+        except Exception as e:
+            logger.error(f"Error extracting document data: {str(e)}")
+            return {
+                "error": f"Document processing failed: {str(e)}",
+                "document_type": document_type
+            }
+    
+    def generate_compliance_summary(self, compliance_data: Dict) -> str:
+        """Generate compliance summary using AI"""
+        try:
+            system_prompt = """You are an expert compliance analyst. Generate a comprehensive compliance summary for grant management."""
+            
+            user_prompt = f"""
+            Generate a compliance summary for the following grant data:
+            
+            Grant: {compliance_data.get('grant_name', 'Unknown')}
+            Rules: {compliance_data.get('grant_rules', 'No rules specified')}
+            Total Amount: ${compliance_data.get('total_amount', 0)}
+            
+            Expenses: {len(compliance_data.get('expenses', []))} total
+            Documents: {len(compliance_data.get('documents', []))} total
+            
+            Provide a comprehensive compliance summary including:
+            1. Overall compliance status
+            2. Key compliance metrics
+            3. Areas of concern
+            4. Recommendations for improvement
+            """
+            
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=user_prompt,
+                generation_config={
+                    "temperature": 0.3,
+                    "top_p": 0.8,
+                    "top_k": 40,
+                    "max_output_tokens": 1024,
+                }
+            )
+            
+            return response.text
+            
+        except Exception as e:
+            logger.error(f"Error generating compliance summary: {str(e)}")
+            return f"Compliance summary generation failed: {str(e)}"
+    
+    def extract_requirements(self, rules_text: str) -> List[str]:
+        """Extract key requirements from grant rules"""
+        try:
+            system_prompt = """You are an expert at analyzing grant rules and extracting key compliance requirements."""
+            
+            user_prompt = f"""
+            Extract the key compliance requirements from this grant rules text:
+            
+            {rules_text}
+            
+            Return a list of specific, actionable requirements. Each requirement should be clear and measurable.
+            """
+            
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=user_prompt,
+                generation_config={
+                    "temperature": 0.2,
+                    "top_p": 0.8,
+                    "top_k": 40,
+                    "max_output_tokens": 512,
+                }
+            )
+            
+            # Parse response into list
+            requirements = response.text.strip().split('\n')
+            return [req.strip('- ').strip() for req in requirements if req.strip()]
+            
+        except Exception as e:
+            logger.error(f"Error extracting requirements: {str(e)}")
+            return ["Unable to extract requirements at this time."]
 
 
 # Global service instance

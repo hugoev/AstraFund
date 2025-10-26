@@ -109,7 +109,6 @@ const GrantForm: React.FC<GrantFormProps> = ({ onSubmit, onCancel }) => {
           message={`Are you sure you want to create grant "${name}" with a total amount of $${parseFloat(totalAmount).toLocaleString()}?`}
           confirmText="Create"
           cancelText="Back"
-          confirmButtonClass={styles.confirmCreate}
         />
       </div>
     </div>

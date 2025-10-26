@@ -45,7 +45,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, onClick }) => {
       </div>
       <div className={styles.footer}>
         <span className={styles.createdAt}>
-          Created: {new Date(user.created_at).toLocaleDateString()}
+          Created: {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}
         </span>
       </div>
     </div>

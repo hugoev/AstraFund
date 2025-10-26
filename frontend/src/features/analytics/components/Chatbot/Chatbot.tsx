@@ -63,7 +63,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onToggle }) => {
     setIsLoading(true);
 
     try {
-      const response = await apiService.chatWithAnalytics(inputMessage);
+      const response = await apiService.chatWithAnalytics(inputMessage, {});
       
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),

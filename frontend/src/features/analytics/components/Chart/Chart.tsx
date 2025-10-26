@@ -18,7 +18,7 @@ interface ChartProps {
 const Chart: React.FC<ChartProps> = ({ 
   title, 
   data, 
-  type = 'line', 
+  type: _type = 'line', 
   height = 200, 
   showAmount = true 
 }) => {

@@ -96,7 +96,6 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, onCancel }) => {
           message={`Are you sure you want to create user "${username}" with role "${role}"?`}
           confirmText="Create"
           cancelText="Back"
-          confirmButtonClass={styles.confirmCreate}
         />
       </div>
     </div>

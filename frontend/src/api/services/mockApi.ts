@@ -3,6 +3,10 @@ import type {
   Approval,
   ComplianceCheckRequest,
   ComplianceCheckResponse,
+  ComplianceDocumentResponse,
+  Document,
+  DocumentAnalysisResponse,
+  DocumentUploadResponse,
   Expense,
   Grant,
   GrantWithExpenses,
@@ -343,6 +347,160 @@ export class MockApiService {
   async getExpenseApprovals(expenseId: number): Promise<Approval[]> {
     await this.simulateDelay();
     return mockApprovals.filter((a) => a.expense_id === expenseId);
+  }
+
+  async chatWithAnalytics(message: string, _context: any): Promise<any> {
+    await this.simulateDelay();
+    return {
+      response: `Mock AI response to: "${message}". Based on the analytics context, here are some insights...`,
+      suggestions: [
+        "View expense trends",
+        "Check compliance rates",
+        "Review pending approvals"
+      ]
+    };
+  }
+
+  // Document Intelligence Mock API methods
+  async uploadDocument(
+    file: File,
+    documentType: string,
+    _grantId?: number
+  ): Promise<DocumentUploadResponse> {
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const mockExtractedData = {
+      merchant_name: "Sample Store",
+      date: "2024-01-15",
+      total_amount: 150.00,
+      items: [
+        { description: "Office Supplies", amount: 100.00 },
+        { description: "Software License", amount: 50.00 }
+      ],
+      tax_amount: 12.00,
+      payment_method: "Credit Card",
+      receipt_number: "RCP-001"
+    };
+
+    return {
+      document_id: `doc_${Date.now()}`,
+      filename: file.name,
+      document_type: documentType,
+      extracted_data: mockExtractedData,
+      confidence_score: 0.95,
+      processing_status: "completed"
+    };
+  }
+
+  async analyzeDocument(
+    documentId: string,
+    analysisType: string = 'compliance'
+  ): Promise<DocumentAnalysisResponse> {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    return {
+      document_id: documentId,
+      analysis_type: analysisType,
+      key_terms: ["Office supplies", "Software", "Business expense"],
+      compliance_notes: ["Expense appears compliant with grant requirements"],
+      risk_score: 0.2,
+      recommendations: ["Keep detailed receipts", "Ensure proper categorization"]
+    };
+  }
+
+  async generateComplianceDocument(grantId: number): Promise<ComplianceDocumentResponse> {
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    return {
+      document_id: `compliance_${Date.now()}`,
+      grant_id: grantId,
+      compliance_summary: "Grant compliance analysis shows 95% compliance rate with all expenses properly categorized and documented.",
+      key_requirements: [
+        "All expenses must be directly related to grant objectives",
+        "Proper documentation required for all purchases",
+        "Expenses must be within approved budget categories"
+      ],
+      compliance_score: 0.95,
+      generated_at: new Date().toISOString()
+    };
+  }
+
+  async getDocument(documentId: string): Promise<Document> {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    return {
+      id: documentId,
+      filename: "sample_receipt.pdf",
+      document_type: "receipt",
+      grant_id: 1,
+      extracted_data: {
+        merchant_name: "Sample Store",
+        total_amount: 150.00
+      },
+      confidence_score: 0.95,
+      processing_status: "completed",
+      created_at: new Date().toISOString()
+    };
+  }
+
+  async getGrantDocuments(grantId: number): Promise<Document[]> {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    return [
+      {
+        id: "doc_1",
+        filename: "receipt_1.pdf",
+        document_type: "receipt",
+        grant_id: grantId,
+        extracted_data: { total_amount: 150.00 },
+        confidence_score: 0.95,
+        processing_status: "completed",
+        created_at: new Date().toISOString()
+      },
+      {
+        id: "doc_2",
+        filename: "contract_1.pdf",
+        document_type: "contract",
+        grant_id: grantId,
+        extracted_data: { contract_title: "Service Agreement" },
+        confidence_score: 0.88,
+        processing_status: "completed",
+        created_at: new Date().toISOString()
+      }
+    ];
+  }
+
+  // Analytics API methods
+  async getAnalyticsOverview(): Promise<any> {
+    await this.simulateDelay();
+    return {
+      totalGrants: 5,
+      totalExpenses: 25,
+      totalAmount: 125000,
+      complianceRate: 0.95,
+      pendingApprovals: 3,
+      recentActivity: [
+        { type: 'expense_approved', description: 'Office supplies approved', amount: 150, date: '2024-01-15' },
+        { type: 'grant_created', description: 'New STEM grant created', amount: 50000, date: '2024-01-14' }
+      ]
+    };
+  }
+
+  async getAnalyticsTrends(_days: number = 30): Promise<any> {
+    await this.simulateDelay();
+    return {
+      expenseTrends: [
+        { date: '2024-01-01', amount: 1000 },
+        { date: '2024-01-02', amount: 1500 },
+        { date: '2024-01-03', amount: 800 }
+      ],
+      complianceTrends: [
+        { date: '2024-01-01', rate: 0.95 },
+        { date: '2024-01-02', rate: 0.98 },
+        { date: '2024-01-03', rate: 0.92 }
+      ]
+    };
   }
 }
 
