@@ -39,6 +39,134 @@
   margin: 0;
 }
 
+.modeSelector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: rgba(13, 13, 43, 0.5);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.modeButton {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #B0B0B0;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.modeButton:hover {
+  color: #F0F0F0;
+  background: rgba(110, 68, 255, 0.1);
+}
+
+.modeButton.active {
+  background: rgba(110, 68, 255, 0.2);
+  color: #6E44FF;
+  border: 1px solid rgba(110, 68, 255, 0.3);
+}
+
+.textInputArea {
+  background: rgba(13, 13, 43, 0.3);
+  border: 1px solid rgba(110, 68, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.inputGroup {
+  margin-bottom: 16px;
+}
+
+.inputGroup label {
+  display: block;
+  color: #F0F0F0;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.grantSelect {
+  width: 100%;
+  background: rgba(13, 13, 43, 0.8);
+  border: 1px solid rgba(110, 68, 255, 0.3);
+  color: #F0F0F0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.grantSelect:focus {
+  outline: none;
+  border-color: #6E44FF;
+  box-shadow: 0 0 0 2px rgba(110, 68, 255, 0.2);
+}
+
+.grantSelect option {
+  background: #0D0D2B;
+  color: #F0F0F0;
+}
+
+.textArea {
+  width: 100%;
+  background: rgba(13, 13, 43, 0.8);
+  border: 1px solid rgba(110, 68, 255, 0.3);
+  color: #F0F0F0;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  transition: all 0.3s ease;
+}
+
+.textArea:focus {
+  outline: none;
+  border-color: #6E44FF;
+  box-shadow: 0 0 0 2px rgba(110, 68, 255, 0.2);
+}
+
+.textArea::placeholder {
+  color: #666;
+}
+
+.submitButton {
+  width: 100%;
+  background: linear-gradient(135deg, #6E44FF, #FFB800);
+  border: none;
+  color: #0D0D2B;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(110, 68, 255, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .dropZone {
   border: 2px dashed rgba(110, 68, 255, 0.4);
   border-radius: 12px;

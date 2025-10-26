@@ -154,6 +154,38 @@
   margin-bottom: var(--spacing-md);
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.statusRow,
+.complianceRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.statusLabel,
+.complianceLabel,
+.justificationLabel {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+}
+
+.justification {
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(110, 68, 255, 0.1);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-secondary);
+}
+
+.justificationText {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem;
+  line-height: 1.4;
 }
 
 .status {
@@ -183,42 +215,17 @@
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
-.compliance {
-  margin-top: var(--spacing-md);
-  padding: var(--spacing-md);
-  border-radius: var(--radius-md);
-  border: 1px solid;
-}
-
-.compliant {
-  background: rgba(74, 222, 128, 0.1);
-  border-color: var(--color-success);
-}
-
-.nonCompliant {
-  background: rgba(248, 113, 113, 0.1);
-  border-color: var(--color-error);
-}
-
 .complianceStatus {
   font-weight: 600;
-  margin-bottom: var(--spacing-xs);
   font-size: 0.875rem;
 }
 
-.compliant .complianceStatus {
+.compliant {
   color: var(--color-success);
 }
 
-.nonCompliant .complianceStatus {
+.nonCompliant {
   color: var(--color-error);
-}
-
-.justification {
-  color: rgba(255, 255, 255, 0.95);
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.5;
 }
 
 .loading {
@@ -299,4 +306,244 @@
   background: linear-gradient(135deg, #7C3AED, #9333EA);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+/* Enhanced Analytics Dashboard */
+.analyticsDashboard {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.analyticsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.analyticsCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  transition: all 0.3s ease;
+}
+
+.analyticsCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardHeader {
+  margin-bottom: var(--spacing-md);
+}
+
+.cardHeader h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background: rgba(110, 68, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: var(--spacing-sm);
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) 0;
+}
+
+.metricLabel {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.metricValue {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-accent);
+  font-size: 1.1rem;
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-sm);
+}
+
+.statusItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-sm);
+  background: rgba(110, 68, 255, 0.1);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(110, 68, 255, 0.2);
+}
+
+.statusLabel {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.statusValue {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-accent);
+  font-size: 1.5rem;
+}
+
+.complianceScore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+}
+
+.scoreCircle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-sm);
+  position: relative;
+}
+
+.scoreCircle::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  background: var(--color-background);
+  border-radius: 50%;
+}
+
+.scoreValue {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--color-accent);
+  position: relative;
+  z-index: 1;
+}
+
+.scoreLabel {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Enhanced Expenses Section */
+.expensesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.expensesHeader h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin: 0;
+}
+
+.expensesControls {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filterGroup,
+.sortGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.filterGroup label,
+.sortGroup label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.filterSelect,
+.sortSelect {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  color: rgba(255, 255, 255, 0.9);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.filterSelect:focus,
+.sortSelect:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 2px rgba(110, 68, 255, 0.2);
+}
+
+.filterSelect option,
+.sortSelect option {
+  background: var(--color-background);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .analyticsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .expensesHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .expensesControls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .statusGrid {
+    grid-template-columns: 1fr;
+  }
 }
