@@ -87,3 +87,11 @@ alembic/versions/*.pyc
 logs/
 *.log
 
+# Temporary development notes
+*_FIX.md
+*_STATUS.md
+*_GUIDE.md
+info.md
+DEMO_*.md
+QUICK_*.md
+
