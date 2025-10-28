@@ -2,6 +2,8 @@
 
 AstraFund is an AI-powered financial compliance co-pilot for non-profits that helps manage restricted grants. It uses Google's Gemini API to automatically check if proposed expenses comply with grant rules before submission, and includes a collaborative "co-sign" feature for final approval.
 
+### 🎥 Watch the Demo (RowdyHacks 2025 - AstraFund)
+
 [![AstraFund RowdyHacks 2025 Winner - Click to Watch](https://img.youtube.com/vi/YRyCnWvd3lY/hqdefault.jpg)](https://youtu.be/YRyCnWvd3lY)
 
 ## ✨ Key Features
